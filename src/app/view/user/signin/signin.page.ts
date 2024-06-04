@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -6,10 +8,39 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./signin.page.scss'],
 })
 export class SigninPage implements OnInit {
+  formLogar: FormGroup;
 
-  constructor() { }
+  constructor(private router : Router, private alertService : AlertService,
+    private formBuilder : FormBuilder){
+      this.formLogar = new FormGroup({
+        email: new FormControl(''),
+        senha: new FormControl('')
+      });
+  }
 
-  ngOnInit() {
+  ngOnInit(){
+    this.formLogar = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]], //required => campo obrigatorio / validacao de email
+      senha: ['', [Validators.required, Validators.minLength(6)]]
+    })
+  }
+
+  get errorControl(){
+    return this.formLogar.controls;
+  }
+
+  private logar(){
+    this.authService.signin
+  }
+
+  submitForm() : boolean{
+    if(!this.formLogar.valid){
+      this.alertService.presentAlert("Erro", "Erro ao Preencher campo!!")
+      return false;
+    }else{
+      this.logar();
+      return true;
+    }
   }
 
 }

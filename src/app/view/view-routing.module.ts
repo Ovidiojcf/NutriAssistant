@@ -7,17 +7,14 @@ const routes: Routes = [
   {
     path: '',
     component: ViewPage
-  },  {
+  },
+  {
     path: 'signin',
     loadChildren: () => import('./user/signin/signin.module').then( m => m.SigninPageModule)
   },
   {
     path: 'signup',
     loadChildren: () => import('./user/signup/signup.module').then( m => m.SignupPageModule)
-  },
-  {
-    path: 'cadastrar-paciente',
-    loadChildren: () => import('./pacientes/Cadastrar/cadastrar-paciente/cadastrar-paciente.module').then( m => m.CadastrarPacientePageModule)
   },
   {
     path: 'cadastrar-paciente',
