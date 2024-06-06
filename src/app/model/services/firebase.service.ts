@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class FirebaseService {
+  private PATH : string = 'pacientes';
 
-  constructor() { }
+  constructor(private firestore : AngularFireS) { }
 }
