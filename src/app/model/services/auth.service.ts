@@ -63,7 +63,4 @@ export class AuthService {
     return signInWithPopup(auth, provider, browserPopupRedirectResolver);
   }
 
-
-
-
 }

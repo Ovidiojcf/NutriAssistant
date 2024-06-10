@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AlertService } from 'src/app/common/alert.service';
+import { AuthService } from 'src/app/model/services/auth.service';
 
 @Component({
   selector: 'app-signin',
@@ -10,7 +12,9 @@ import { Router } from '@angular/router';
 export class SigninPage implements OnInit {
   formLogar: FormGroup;
 
-  constructor(private router : Router, private alertService : AlertService,
+  constructor(private router : Router, 
+    private alertService : AlertService,
+    private authService : AuthService,
     private formBuilder : FormBuilder){
       this.formLogar = new FormGroup({
         email: new FormControl(''),
@@ -30,7 +34,15 @@ export class SigninPage implements OnInit {
   }
 
   private logar(){
-    this.authService.signin
+    this.authService.signIn(this.formLogar.value['email'],
+    this.formLogar.value['senha']).then((res)=>{
+      this.alertService.presentAlert("Olá", "Seja Bem Vindo ao Nutri Assistant")
+      this.router.navigate(["colocar para tela inicial"]);
+    })
+    .catch((error)=>{
+      this.alertService.presentAlert("Erro","Não foi possível Logar no Sistema")
+      console.log(error.message)
+    })
   }
 
   submitForm() : boolean{
@@ -41,6 +53,10 @@ export class SigninPage implements OnInit {
       this.logar();
       return true;
     }
+  }
+
+  irParaSignUp(){
+    this.router.navigate(["signup"]);
   }
 
 }
