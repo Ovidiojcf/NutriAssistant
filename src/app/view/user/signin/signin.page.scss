@@ -1,115 +1,50 @@
-/* Estilo para o cabeçalho */
-ion-header {
-    --background: #3880ff; /* Cor de fundo do cabeçalho */
-    --color: rgb(0, 0, 0); /* Cor do texto no cabeçalho */
-    text-align: center;
-    padding: 2vh; /* Padding baseado na altura da viewport */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@700&display=swap');
+
+ion-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centraliza verticalmente */
+  align-items: center;    /* Centraliza horizontalmente */
+  min-height: 100%;       /* Garante que o conteúdo ocupe toda a altura */
+  text-align: center;      /* Centraliza o texto dos títulos */
+  --padding-start: 40px;
+  --padding-end: 40px;
+  --padding-top: 140px; // Aumenta o padding superior
+  --padding-bottom: 40px; // Aumenta o padding inferior
+
+ion-button{
+  font-size: 2em;
+  --padding-start: 10px; 
+  --padding-end: 10px;
+}
+
+  h1, h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    margin-bottom: 20px;   /* Espaço entre os títulos e o formulário */
   }
-  
-  ion-toolbar {
-    --background: transparent; /* Cor de fundo da toolbar */
-    --color: white; /* Cor do texto na toolbar */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 10vh; /* Altura da toolbar baseada na altura da viewport */
-  }
-  
-  /* Estilo para o título */
-  ion-title {
-    font-size: 4vh; /* Tamanho da fonte baseado na altura da viewport */
-    font-weight: bold;
-  }
-  
-  /* Estilo para o conteúdo */
-  ion-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80vh; /* Altura baseada na altura da viewport */
-    padding: 2vh;
-    background-color: #f4f4f4; /* Cor de fundo do conteúdo */
-  }
-  
-  /* Estilo para o formulário */
-  form {
+
+  .form {
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 90vw; /* Largura do formulário baseada na largura da viewport */
-    max-width: 400px; /* Largura máxima do formulário */
-    padding: 4vh; /* Padding baseado na altura da viewport */
-    background-color: white; /* Cor de fundo do formulário */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para o formulário */
-    border-radius: 2vh; /* Bordas arredondadas */
-  }
-  
-  /* Estilo para os itens do formulário */
-  ion-item {
-    width: 100%;
-    margin-bottom: 2vh; /* Margem inferior baseada na altura da viewport */
-  }
-  
-  /* Estilo para os rótulos dos itens */
-  ion-label {
-    font-size: 2vh; /* Tamanho da fonte baseado na altura da viewport */
-    color: #333; /* Cor do texto */
-  }
-  
-  /* Estilo para os campos de entrada */
-  ion-input {
-    --padding-start: 2vh; /* Padding inicial baseado na altura da viewport */
-    --padding-end: 2vh; /* Padding final baseado na altura da viewport */
-    font-size: 1.8vh; /* Tamanho da fonte baseado na altura da viewport */
-    border: 1px solid #ddd; /* Borda para os campos de entrada */
-    border-radius: 1vh; /* Bordas arredondadas */
-  }
-  
-  /* Estilo para as mensagens de erro */
-  span {
-    color: #e63946; /* Cor das mensagens de erro */
-    font-size: 1.5vh; /* Tamanho da fonte baseado na altura da viewport */
-    margin-bottom: 1vh; /* Margem inferior baseada na altura da viewport */
-    display: block;
-    text-align: left;
-  }
-  
-  /* Estilo para o botão de envio */
-  ion-button {
-    margin-top: 2vh; /* Margem superior baseada na altura da viewport */
-    font-size: 2vh; /* Tamanho da fonte baseado na altura da viewport */
-    padding: 2vh; /* Padding baseado na altura da viewport */
-    border-radius: 1vh; /* Bordas arredondadas */
-    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para o botão */
-  }
-  
-  /* Estilo para o link de cadastro */
-  a {
-    margin-top: 2vh; /* Margem superior baseada na altura da viewport */
-    color: #3880ff; /* Cor do link */
-    font-size: 1.5vh; /* Tamanho da fonte baseado na altura da viewport */
-    text-decoration: underline; /* Sublinhado */
-    cursor: pointer;
-    text-align: center;
-  }
-  
-  a:hover {
-    color: #2a65c0; /* Cor ao passar o mouse */
-  }
-  
-  /* Estilos específicos para diferentes tamanhos de tela */
-  @media (min-width: 600px) {
-    form {
-      max-width: 500px; /* Largura máxima do formulário em telas maiores */
-      padding: 5vh; /* Padding maior baseado na altura da viewport */
+    width: 80%;
+    max-width: 400px;
+    gap: 16px;
+    align-items: center;  
+
+    ion-item {
+      width: 100%;
     }
-  
-    ion-title {
-      font-size: 5vh; /* Tamanho maior da fonte em telas maiores */
+
+    ion-label {
+      font-size: 2em;
+      text-align: center;
     }
-  
-    ion-button {
-      font-size: 2.5vh; /* Tamanho maior da fonte no botão */
+
+    ion-input {
+      font-size: 2.0em;
     }
+
   }
-  
+}
