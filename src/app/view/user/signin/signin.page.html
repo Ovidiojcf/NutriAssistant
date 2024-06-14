@@ -13,7 +13,7 @@
     </ion-item>
     <span *ngIf="formLogar.get('senha')?.touched && formLogar.get('senha')?.errors?.['required']">Senha é obrigatória</span><br/>
     <span *ngIf="formLogar.get('senha')?.dirty && formLogar.get('senha')?.errors?.['minlength']">Senha precisa ter no mínimo 6 dígitos</span>
-    <ion-button expand="block" color="success" type="submit">Entrar</ion-button>
+    <ion-button expand="block" color="new" shape="round" type="submit">Entrar</ion-button>
     <h3>Não tem cadastro? <a (click)="irParaSignUp()">Clique aqui!</a> </h3>
   </form>
 </ion-content>

@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@700&display=swap');
+
+ion-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centraliza verticalmente */
+  align-items: center;    /* Centraliza horizontalmente */
+  min-height: 100%;       /* Garante que o conteúdo ocupe toda a altura */
+  text-align: center;      /* Centraliza o texto dos títulos */
+  --padding-start: 40px;
+  --padding-end: 40px;
+  --padding-top: 140px; // Aumenta o padding superior
+  --padding-bottom: 40px; // Aumenta o padding inferior
+
+ion-button{
+    margin-top: 15px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 1.8em;
+    --padding-top: 4px;  
+    --padding-bottom: 4px;
+    line-height: 0.8;
+    border-radius: 20;
+    
+}
+
+  h1, h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    margin-bottom: 20px;   /* Espaço entre os títulos e o formulário */
+  }
+
+  .form {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-width: 400px;
+    gap: 16px;
+    align-items: center;  
+
+    ion-item {
+      width: 100%;
+    }
+
+    ion-label {
+        --line-height: 3em;
+      --font-size: 2em;
+      text-align: center;
+    //  font-family: releway
+      
+    }
+    .text-input{
+        font-size: 2em !important ;
+    }
+    ion-input {
+      --font-size: 2.0em;
+    }
+
+  }
+}
