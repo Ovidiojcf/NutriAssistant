@@ -56,7 +56,7 @@ export class SigninPage implements OnInit {
   }
 
   irParaSignUp(){
-    this.router.navigate(["signup"]);
+    this.router.navigate(["cadastrar"]);
   }
 
 }

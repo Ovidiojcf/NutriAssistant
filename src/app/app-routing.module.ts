@@ -8,8 +8,12 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'signin',
+    path: 'login',
     loadChildren: () => import('./view/user/signin/signin.module').then( m => m.SigninPageModule)
+  },
+  {
+    path: 'cadastrar',
+    loadChildren: () => import('./view/user/signup/signup.module').then( m => m.SignupPageModule)
   }
 
 ];

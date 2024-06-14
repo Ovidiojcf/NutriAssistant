@@ -13,9 +13,14 @@ ion-content {
   --padding-bottom: 40px; // Aumenta o padding inferior
 
 ion-button{
-  font-size: 2em;
-  --padding-start: 10px; 
-  --padding-end: 10px;
+  margin-top: 15px;
+  font-size: 1.8em;
+  font-family: 'Archivo', sans-serif;
+  --padding-top: 4px;  
+  --padding-bottom: 4px;
+  line-height: 0.8;
+  border-radius: 20;
+  
 }
 
   h1, h2 {
