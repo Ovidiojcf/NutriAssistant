@@ -37,7 +37,7 @@ export class SigninPage implements OnInit {
     this.authService.signIn(this.formLogar.value['email'],
     this.formLogar.value['senha']).then((res)=>{
       this.alertService.presentAlert("Olá", "Seja Bem Vindo ao Nutri Assistant")
-      this.router.navigate(["colocar para tela inicial"]);
+      this.router.navigate(["Home"]);
     })
     .catch((error)=>{
       this.alertService.presentAlert("Erro","Não foi possível Logar no Sistema")

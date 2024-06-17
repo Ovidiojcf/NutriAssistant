@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { AlertService } from 'src/app/common/alert.service';
 import { AuthService } from 'src/app/model/services/auth.service';
+import { FirebaseService } from 'src/app/model/services/firebase.service';
 
 @Component({
   selector: 'app-signup',
@@ -12,8 +13,14 @@ import { AuthService } from 'src/app/model/services/auth.service';
 export class SignupPage implements OnInit {
   formCadastrar: FormGroup;
 
-  constructor( private alertService: AlertService,private router: Router,
-    private formBuilder: FormBuilder, private authService: AuthService){ 
+
+  constructor( 
+    private alertService: AlertService,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private firebaseService: FirebaseService
+  ){ 
       this.formCadastrar = new FormGroup({
         email: new FormControl(''),
         senha: new FormControl(''),
@@ -25,7 +32,9 @@ export class SignupPage implements OnInit {
     this.formCadastrar = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
-      confSenha: ['',[Validators.required, Validators.maxLength(6)]]
+      confSenha: ['',[Validators.required, Validators.minLength(6)]],
+      name: ['', Validators.required],
+      ra: ['', Validators.required]
     })
   }
 
@@ -39,13 +48,17 @@ export class SignupPage implements OnInit {
       return false;
     }else{
       this.cadastrar();
+      this.cadastrarWithName();
       return true;
     }
   }
 
   private cadastrar(){
-    this.authService.signUpWithEmailAndPassword(this.formCadastrar.value['email'], 
+    console.log(this.formCadastrar)
+
+    this.authService.signUpWithEmailAndPassword(this.formCadastrar.value['email'],
     this.formCadastrar.value['senha']).then((res)=>{
+      
       this.alertService.presentAlert("Cadastro", "Cadastro realizado com sucesso")
       this.router.navigate(['signin']);
     })
@@ -53,7 +66,31 @@ export class SignupPage implements OnInit {
       this.alertService.presentAlert("Cadastro", "Erro ao cadastrar")
       console.log(error.message)
     })
-    
   }
+
+  private async cadastrarWithName() {
+    try {
+      const { email, senha, name, ra } = this.formCadastrar.value;
+
+      const userCredential = await this.authService.signUpWithEmailAndPassword(email, senha);
+
+      const user = userCredential.user;
+      if (user) {
+        const userData = {
+          name,
+          ra: parseInt(ra, 10)
+        };
+
+        await this.firebaseService.cadastrarUser(userData, user.uid); // Passa o uid para o FirebaseService
+
+        this.alertService.presentAlert("Cadastro", "Cadastro realizado com sucesso");
+        this.router.navigate(['signin']);
+      }
+    } catch (error) {
+      this.alertService.presentAlert("Cadastro", "Erro ao cadastrar o Nome do Usuario");
+      console.error(error);
+    }
+  }
+  
 
 }
