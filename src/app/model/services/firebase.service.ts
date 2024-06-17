@@ -7,6 +7,7 @@ import Paciente from '../entities/Paciente';
 })
 export class FirebaseService {
   private PATH : string = 'pacientes';
+  private PATH2 : string = 'usuarios'
 
   constructor(private angularFirestore : AngularFirestore) { }
 
@@ -21,6 +22,12 @@ export class FirebaseService {
       data: paciente.data
     })
   }
+
+  cadastrarUser(usuario: any, uid: string) {
+    return this.angularFirestore.collection(this.PATH2).doc(uid).set(usuario);
+  }
+
+
 
   editarPaciente(paciente: Paciente, id : string){
     return this.angularFirestore.collection(this.PATH).doc(id).update({
