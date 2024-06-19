@@ -84,7 +84,7 @@ export class SignupPage implements OnInit {
         await this.firebaseService.cadastrarUser(userData, user.uid); // Passa o uid para o FirebaseService
 
         this.alertService.presentAlert("Cadastro", "Cadastro realizado com sucesso");
-        this.router.navigate(['signin']);
+        this.router.navigate(['login']);
       }
     } catch (error) {
       this.alertService.presentAlert("Cadastro", "Erro ao cadastrar o Nome do Usuario");

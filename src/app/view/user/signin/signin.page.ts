@@ -34,10 +34,11 @@ export class SigninPage implements OnInit {
   }
 
   private logar(){
+    console.log('a');
     this.authService.signIn(this.formLogar.value['email'],
     this.formLogar.value['senha']).then((res)=>{
       this.alertService.presentAlert("Olá", "Seja Bem Vindo ao Nutri Assistant")
-      this.router.navigate(["Home"]);
+      this.router.navigate(['home']);
     })
     .catch((error)=>{
       this.alertService.presentAlert("Erro","Não foi possível Logar no Sistema")
@@ -46,6 +47,7 @@ export class SigninPage implements OnInit {
   }
 
   submitForm() : boolean{
+    console.log('a')
     if(!this.formLogar.valid){
       this.alertService.presentAlert("Erro", "Erro ao Preencher campo!!")
       return false;
