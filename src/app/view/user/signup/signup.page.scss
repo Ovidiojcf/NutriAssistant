@@ -7,9 +7,9 @@ ion-content {
   align-items: center;    /* Centraliza horizontalmente */
   min-height: 100%;       /* Garante que o conteúdo ocupe toda a altura */
   text-align: center;      /* Centraliza o texto dos títulos */
-  --padding-start: 40px;
+  --padding-start: 10px;
   --padding-end: 40px;
-  --padding-top: 140px; // Aumenta o padding superior
+  --padding-top: 20px; // Aumenta o padding superior
   --padding-bottom: 40px; // Aumenta o padding inferior
 
 ion-button{
@@ -30,7 +30,7 @@ ion-button{
   }
 
   .form {
-    margin-top: 50px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     width: 80%;

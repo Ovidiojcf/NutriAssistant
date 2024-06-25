@@ -47,26 +47,11 @@ export class SignupPage implements OnInit {
       this.alertService.presentAlert("Erro", "Erro ao Preencher campo!!")
       return false;
     }else{
-      this.cadastrar();
       this.cadastrarWithName();
       return true;
     }
   }
 
-  private cadastrar(){
-    console.log(this.formCadastrar)
-
-    this.authService.signUpWithEmailAndPassword(this.formCadastrar.value['email'],
-    this.formCadastrar.value['senha']).then((res)=>{
-      
-      this.alertService.presentAlert("Cadastro", "Cadastro realizado com sucesso")
-      this.router.navigate(['signin']);
-    })
-    .catch((error)=>{
-      this.alertService.presentAlert("Cadastro", "Erro ao cadastrar")
-      console.log(error.message)
-    })
-  }
 
   private async cadastrarWithName() {
     try {
