@@ -13,6 +13,10 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./view/home/home.module').then( m => m.HomePageModule)
+  },
+  {
+    path: 'cadastrar-paciente',
+    loadChildren: () => import('./view/pacientes/cadastrar-paciente/cadastrar-paciente.module').then(m => m.CadastrarPacientePageModule)
   }
 
 ];
