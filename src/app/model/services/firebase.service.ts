@@ -19,7 +19,14 @@ export class FirebaseService {
     return this.angularFirestore.collection(this.PATH).add({
       nome: paciente.nome,
       idade: paciente.idade,
-      data: paciente.data
+      data: paciente.data,
+      alergia: paciente.alergia,
+      comorbidades: paciente.comorbidades,
+      habitoIntestinal: paciente.habitoIntestinal,
+      pesoAtual: paciente.pesoAtual,
+      pesoUsual: paciente.pesoUsual,
+      altura: paciente.altura,
+      imc: paciente.imc
     })
   }
 
