@@ -17,7 +17,16 @@ const routes: Routes = [
   {
     path: 'cadastrar-paciente',
     loadChildren: () => import('./view/pacientes/cadastrar-paciente/cadastrar-paciente.module').then(m => m.CadastrarPacientePageModule)
+  },
+  {
+    path: 'lista-paciente',
+    loadChildren: () => import('./view/pacientes/lista-paciente/lista-paciente.module').then( m => m.ListaPacientePageModule)
+  },
+  {
+    path: 'detalhar-paciente',
+    loadChildren: () => import('./view/pacientes/detalhar-paciente/detalhar-paciente.module').then(m => m.DetalharPacientePageModule)
   }
+
 
 ];
 

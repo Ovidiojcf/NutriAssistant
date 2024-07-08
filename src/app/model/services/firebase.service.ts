@@ -29,6 +29,10 @@ export class FirebaseService {
       imc: paciente.imc
     })
   }
+  read(){
+    return this.angularFirestore.collection(this.PATH)
+    .snapshotChanges();
+  }
 
   cadastrarUser(usuario: any, uid: string) {
     return this.angularFirestore.collection(this.PATH2).doc(uid).set(usuario);
