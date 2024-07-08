@@ -14,6 +14,8 @@ export class TabsComponent  implements OnInit {
   irParaCadastrarPaciente() {
     this.router.navigate(['cadastrar-paciente']);
   }
+  irParaLista(){
+    this.router.navigate(['lista-paciente']);
+  }
 
-  
 }
