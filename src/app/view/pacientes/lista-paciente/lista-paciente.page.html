@@ -8,11 +8,9 @@
 </ion-toolbar>
 
 <ion-content>
-  <ion-searchbar disabled="false" placeholder="Nome do Paciente"></ion-searchbar>
-    <ion-item *ngFor="let paciente of lista_pacientes">
+  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filtrarPaciente()" placeholder="Nome do Paciente"></ion-searchbar>
+    <ion-item *ngFor="let paciente of paciente">
       <ion-label>{{paciente.nome}}</ion-label>
-      <ion-button slot="end" (click)="irDetalhar()">
-        <ion-icon slot="end" name="menu" ></ion-icon>
-      </ion-button>
+        <ion-icon slot="end" name="menu" (click)="irDetalhar()" ></ion-icon>
     </ion-item>
 </ion-content>

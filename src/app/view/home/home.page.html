@@ -3,8 +3,23 @@
 </ion-toolbar>
 
 
-<div>
-  <ion-searchbar placeholder="Nome do Paciente"></ion-searchbar>
-</div>
+<ion-content>
+  
+</ion-content>
 
-<app-tabs></app-tabs>
+<ion-tabs style="--background: new ;">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="add" (click)="irParaCadastrarPaciente()">
+      <ion-icon name="add-circle"></ion-icon>
+      Adicionar 
+    </ion-tab-button>
+    <ion-tab-button tab="search" (click)="irParaLista()">
+      <ion-icon name="search"></ion-icon>
+      Pesquisar
+    </ion-tab-button>
+    <ion-tab-button tab="user">
+      <ion-icon  name="person"></ion-icon>
+      Perfil
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

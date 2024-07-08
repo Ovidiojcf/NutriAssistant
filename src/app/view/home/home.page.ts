@@ -16,4 +16,8 @@ export class HomePage implements OnInit {
   irParaLista(){
     this.router.navigate(['lista-paciente']);
   }
+  irParaCadastrarPaciente() {
+    this.router.navigate(['cadastrar-paciente']);
+  }
+
 }
