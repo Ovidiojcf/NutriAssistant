@@ -7,6 +7,53 @@
   </ion-title>
 </ion-toolbar>
 
-<ion-content>
-<p>Olá didio bot</p>
+<ion-content>    
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title><ion-label>Paciente: {{ paciente.nome }}</ion-label></ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6"> <div class="ion-text-center">
+              <ion-item lines="none">
+                <ion-label>Idade: {{ paciente.idade }}</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label lines="none">Altura: {{ paciente.altura }} m</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>Comorbidades: {{ paciente.comorbidades }}</ion-label>
+              </ion-item>
+            </div></ion-col>
+            <ion-col size="6"> <div class="ion-text-center">
+              <ion-item lines="none">
+                <ion-label>Peso Atual: {{ paciente.pesoAtual }} kg</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>Peso Usual: {{ paciente.pesoUsual }} kg</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>IMC: {{ paciente.imc | number:'1.2-2' }}</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>Hábito Intestinal: {{ paciente.habitoIntestinal }}</ion-label>
+              </ion-item>
+            </div></ion-col>
+          </ion-row>
+          <ion-item lines="none">
+            <ion-label>Alergias:</ion-label>
+            <ion-note slot="end">
+              <ion-chip *ngFor="let alergia of paciente.alergia">
+                {{ alergia }}
+              </ion-chip>
+            </ion-note>
+          </ion-item>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+    
+    <ion-button   class="buttonPaciente"  shape="round" color="new" type="submit">
+      Efetuar Triagem
+    </ion-button>
 </ion-content>

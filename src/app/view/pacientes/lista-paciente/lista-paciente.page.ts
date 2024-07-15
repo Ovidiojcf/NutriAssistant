@@ -45,7 +45,9 @@ export class ListaPacientePage implements OnInit {
     console.log('Neto ok');
     this.router.navigate(['/detalhar-paciente']);
   }
-
+  irCadastrar(){
+    this.router.navigate(['cadastrar-paciente']);
+  }
   filtrarPaciente() {
     if (this.searchTerm.trim() === '') {
       this.paciente = this.lista_pacientes; // Mostra todos os atletas se a busca estiver vazia
@@ -59,5 +61,11 @@ export class ListaPacientePage implements OnInit {
 
   ordenarPorNome() {
     this.paciente.sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+
+  detalhar(paciente: Paciente) {
+    console.log('Detalhando paciente: ');
+    console.log(paciente.id);
+    this.router.navigateByUrl('/detalhar-paciente', { state: { paciente: paciente } });
   }
 }

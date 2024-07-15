@@ -25,7 +25,11 @@ const routes: Routes = [
   {
     path: 'detalhar-paciente',
     loadChildren: () => import('./view/pacientes/detalhar-paciente/detalhar-paciente.module').then(m => m.DetalharPacientePageModule)
+  },  {
+    path: 'user',
+    loadChildren: () => import('./view/user/user/user.module').then( m => m.UserPageModule)
   }
+
 
 
 ];

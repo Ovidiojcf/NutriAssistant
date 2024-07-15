@@ -1,8 +1,11 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Cadastrar</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-toolbar>
+  <ion-button slot="start" (click)="voltar()" fill="clear">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <ion-title>
+    <img src="assets/svg/Nutri_toolbar.png" alt="">
+  </ion-title>
+</ion-toolbar>
 
 <ion-content>
   <form [formGroup]="formCadastrar" (ngSubmit)="submitForm()">
