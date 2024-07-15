@@ -42,16 +42,6 @@ export class CadastrarPacientePage implements OnInit {
 
   ngOnInit() {
 
-    /*this.atualizarIMC();
-    // Adiciona um listener para o campo 'pesoAtual'
-    this.formPaciente.get('pesoAtual')?.valueChanges.subscribe(() => {
-      this.atualizarIMC();
-    });
-    // Adiciona um listener para o campo 'altura'
-    this.formPaciente.get('altura')?.valueChanges.subscribe(() => {
-      this.atualizarIMC();
-    });*/
-
   }
 
   cadastrarPaciente(formPaciente : FormGroup){

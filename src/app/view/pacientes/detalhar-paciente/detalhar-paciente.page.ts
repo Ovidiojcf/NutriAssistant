@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertService } from 'src/app/common/alert.service';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import Paciente from 'src/app/model/entities/Paciente';
 import { AuthService } from 'src/app/model/services/auth.service';
-import { FirebaseService } from 'src/app/model/services/firebase.service';
+
 
 @Component({
   selector: 'app-detalhar-paciente',
@@ -17,20 +17,22 @@ export class DetalharPacientePage implements OnInit {
   public formDetalhes!: FormGroup;
   
   constructor(
-    private alertService: AlertService,
     private router: Router,
+    private route: ActivatedRoute,
     private authService: AuthService,
-    private firebaseService: FirebaseService,
-    private formBuilder : FormBuilder,
+    private navCtrl: NavController
+
     ) { 
       this.user = this.authService.getUserLogged();
     }
 
   ngOnInit() {
+    this.paciente = history.state.paciente;
+
   }
 
   voltar() {
-    this.router.navigate(['/home']); // Navega para a rota desejada
+    this.navCtrl.back(); // voltar para a pagina anterior
   }
 
 }

@@ -34,7 +34,7 @@ export class SigninPage implements OnInit {
   }
 
   private logar(){
-    console.log('a');
+    console.log('Efetuando Login')
     this.authService.signIn(this.formLogar.value['email'],
     this.formLogar.value['senha']).then((res)=>{
       this.alertService.presentAlert("Olá", "Seja Bem Vindo ao Nutri Assistant")
@@ -47,7 +47,6 @@ export class SigninPage implements OnInit {
   }
 
   submitForm() : boolean{
-    console.log('a')
     if(!this.formLogar.valid){
       this.alertService.presentAlert("Erro", "Erro ao Preencher campo!!")
       return false;

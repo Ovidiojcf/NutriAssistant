@@ -11,6 +11,13 @@
   <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filtrarPaciente()" placeholder="Nome do Paciente"></ion-searchbar>
     <ion-item *ngFor="let paciente of paciente">
       <ion-label>{{paciente.nome}}</ion-label>
-        <ion-icon slot="end" name="menu" (click)="irDetalhar()" ></ion-icon>
+        <ion-icon slot="end" name="menu" (click)="detalhar(paciente)" ></ion-icon>
     </ion-item>
 </ion-content>
+<ion-footer>
+  <ion-fab horizontal="end" vertical="bottom">
+    <ion-fab-button color="new">
+      <ion-icon name="person-add-outline" (click)="irCadastrar()"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-footer>
