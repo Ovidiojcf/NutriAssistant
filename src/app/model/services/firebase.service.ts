@@ -7,7 +7,8 @@ import Paciente from '../entities/Paciente';
 })
 export class FirebaseService {
   private PATH : string = 'pacientes';
-  private PATH2 : string = 'usuarios'
+  private PATH2 : string = 'usuarios';
+  private PATH3: string = 'formularios';
 
   constructor(private angularFirestore : AngularFirestore) { }
 

@@ -1,0 +1,13 @@
+/* No seu arquivo .scss da página */
+ion-checkbox::part(container) {
+    border-radius: 50%; /* Faz o checkbox redondo */
+    width: 20px; /* Define a largura do círculo */
+    height: 20px; /* Define a altura do círculo */
+  }
+  
+  ion-checkbox::part(mark) {
+    /* Personaliza a aparência do "check" quando marcado (opcional) */
+    background-color: #007bff; /* Cor de fundo do check */
+    border-radius: 50%; /* Faz o check redondo */
+  }
+  

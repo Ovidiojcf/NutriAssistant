@@ -41,7 +41,7 @@ export class CadastrarPacientePage implements OnInit {
   }
 
   ngOnInit() {
-
+    this.paciente = history.state.paciente;
   }
 
   cadastrarPaciente(formPaciente : FormGroup){

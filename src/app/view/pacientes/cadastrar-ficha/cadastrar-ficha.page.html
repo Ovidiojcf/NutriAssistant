@@ -1,0 +1,335 @@
+<ion-toolbar>
+  <ion-button slot="start" (click)="voltar()" fill="clear">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <ion-title>
+    <img src="assets/svg/Nutri_toolbar.png" alt="">
+  </ion-title>
+</ion-toolbar>
+
+<ion-content>
+  <!-- NSR e com as devidas restrições de lógica de programação -->
+  <form [formGroup]="formNRS1" >
+    <ion-card>
+      <ion-item lines="none">
+        <ion-label>Paciente: {{paciente.nome}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label position="floating">Data</ion-label>
+        <ion-input formControlName="data" type="text" [value]="dataAtual"></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>IMC atual: {{paciente.imc.toFixed(2)}}</ion-label>
+      </ion-item>
+      <ion-card-header>
+        <ion-label>Parte 1</ion-label>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+
+          <ion-item>
+            <ion-label>1. O IMC do paciente é < 20,5 kg/m²?</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="pIMC">
+              <ion-select-option value="sim">Sim</ion-select-option>
+              <ion-select-option value="nao">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>2. O paciente teve perda de peso não-intencional nos últimos três meses?</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="pPerda">
+              <ion-select-option value="sim">Sim</ion-select-option>
+              <ion-select-option value="nao">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>3. O paciente teve redução na ingestão alimentar na última semana?</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="pReducao">
+              <ion-select-option value="sim">Sim</ion-select-option>
+              <ion-select-option value="nao">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>4. O paciente está em estado grave, mau estado geral ou em terapia intensiva?</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="pEstado">
+              <ion-select-option value="sim">Sim</ion-select-option>
+              <ion-select-option value="nao">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+
+
+    <ion-card *ngIf="mostrarParte2">
+      <ion-card-header>
+        <ion-card-title>Estado nutricional prejudicado (A)</ion-card-title>
+        <ion-card-subtitle>Parte 2</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="formNRS2" >
+          <ion-list lines="none">
+            <ion-radio-group formControlName="eNutricionalPrejudicado">
+              <ion-item>
+                <ion-label>Ausente: Estado nutricional normal</ion-label>
+                <ion-radio slot="end" value="ausente"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Leve: Perda de peso > 5% em 3 meses OU
+                  ingestão alimentar abaixo de 50 a 75% das necessidades normais na semana precendente.</ion-label>
+                <ion-radio slot="end" value="leve"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Moderado: Perda de peso > 5% em 2 meses ou IMC 18,5 a 20,5 kg/m² + prejuizos das condições gerais
+                  OU
+                  ingestão alimentar abaixo de 20 a 60% das necessidades normais na semana precendente.</ion-label>
+                <ion-radio slot="end" value="moderado"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Grave: Perda de peso > 5% em 1 mes ( >15% em 3 meses ) ou IMC < 18,5 kg/m² + prejuizos das
+                  condições gerais OU
+                  ingestão alimentar abaixo de 0 a 25% das necessidades normais na semana precendente.</ion-label>
+                <ion-radio slot="end" value="grave"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-list>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="mostrarParte2">
+      <ion-card-header>
+        <ion-card-title>Gravidade da doença (aumento das necessidades) (B)</ion-card-title>
+        <ion-card-subtitle>Parte 2</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="formNRS2" >
+          <ion-list lines="none">
+            <ion-radio-group formControlName="gravidadeDoenca">
+              <ion-item>
+                <ion-label>Ausente: Estado nutricional normal</ion-label>
+                <ion-radio slot="end" value="ausente"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Leve: Fratura do quadril, pacientes crônicos, em particular com condições
+                  agudas: cirrose, DPOC, hemodiálise crônica, diabetes e cançer.
+                </ion-label>
+                <ion-radio slot="end" value="leve"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Moderado: Cirurgia abdominal de grande porte, fraturas, pneumonia grave, leucemias e
+                  linfomas</ion-label>
+                <ion-radio slot="end" value="moderado"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Grave: Traumatismo craaniano, transplante de medula óssea, paciente em UTI</ion-label>
+                <ion-radio slot="end" value="grave"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-list>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="mostrarParte2 && formNRS2.valid">
+      <ion-card-content>
+        <ion-card-header>
+          <ion-card-title>O paciente está: {{calcularEstadoNutricional()}}</ion-card-title>
+        </ion-card-header>
+      </ion-card-content>
+    </ion-card>
+  </form>
+
+  <form [formGroup]="formASG">
+    <!-- Avaliação ASG Formulario -->
+    <ion-card>
+      <ion-item lines="none"><ion-label>Avaliação Nutricional Subjetiva Global</ion-label></ion-item>
+      
+      <ion-card-content>
+        <!-- Parte do Peso -->
+         <ion-list lines="none">
+          <ion-list-header><ion-label>Peso</ion-label></ion-list-header>
+          <ion-item>
+            <ion-label>Mudança de peso nos ultimos 6 meses?</ion-label>
+            <ion-select slot="end" interface="popover" formControlName="mudancaPeso" placeholder="Selecione">
+              <ion-select-option value="sim">Sim</ion-select-option>
+              <ion-select-option value="nao">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Continua perdendo peso atualmente?</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="continuaPerdendoPeso">
+              <ion-select-option value="sim">Sim</ion-select-option>
+              <ion-select-option value="nao">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Peso Atual"  formControlName="pesoAtual" type="string" fill="outline" inputmode="decimal" step="0.1"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Peso Habitual" formControlName="pesoHabitual" type="string" fill="outline" inputmode="decimal" step="0.1"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Peso Internação" type="string" fill="outline" inputmode="decimal" step="0.1"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Dias internado" type="string" fill="outline" inputmode="decimal" step="0.1"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Perda de peso:</ion-label>
+            <ion-input [value]="formASG.get('perdaPeso')?.value + '%'" readonly></ion-input>
+          </ion-item>
+
+         </ion-list>
+        
+        <!-- Parte da Dieta -->
+        <ion-list lines="none">
+          <ion-list-header>
+            <ion-label>Dieta do Paciente</ion-label>
+          </ion-list-header>
+          <ion-item>
+            <ion-label>Mudaça da Dieta</ion-label>
+            <ion-select slot="end" interface="popover" formControlName="mudancaDieta" placeholder="Selecione">
+              <ion-select-option value="sim">Sim</ion-select-option>
+              <ion-select-option value="nao">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Dieta Hipocalórica</ion-label>
+            <ion-checkbox slot="end" formControlName="dietaHipocalorica"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Dieta Pastosa Hipocalórica</ion-label>
+            <ion-checkbox slot="end" formControlName="dietaPastosaHipocalorica"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Dieta Liquida ou Solução Intravenosa</ion-label>
+            <ion-checkbox slot="end"  formControlName="dietaLiquida"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Jejum maior que 5 dias</ion-label>
+            <ion-checkbox slot="end" formControlName="jejum" ></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Mudança Persistente maior que 30 dias</ion-label>
+            <ion-checkbox slot="end" formControlName="mudancaPersistente"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+        <!-- Parte dos Sntomas Gastrintestinais -->
+        <ion-list>
+          <ion-list-header>
+            <ion-label>Sintomas Gastrintestinais</ion-label></ion-list-header>
+          <ion-item lines="none">
+            <ion-label>Disfalgia e/ou odinofagia</ion-label>
+            <ion-checkbox slot="end" formControlName="disfagia"></ion-checkbox>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Náuseas</ion-label>
+            <ion-checkbox slot="end" formControlName="nauseas"></ion-checkbox> 
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Vômitos</ion-label>
+            <ion-checkbox slot="end" formControlName="vomitos"></ion-checkbox>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Diarréia</ion-label>
+            <ion-checkbox slot="end" formControlName="diarreia"></ion-checkbox>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Anorexia, distensão ou dor abdominal</ion-label>
+            <ion-checkbox slot="end" formControlName="anorexia"></ion-checkbox> 
+          </ion-item>
+        </ion-list>
+        <!-- Capacidade Funcional Fisica -->
+        <ion-list lines="none">
+          <ion-list-header>
+            <ion-label>Capacidade Funcional Fisica</ion-label>
+          </ion-list-header>
+          <ion-radio-group formControlName="capacidadeFuncional">
+            <ion-item>
+              <ion-label>Abaixo do normal</ion-label>
+              <ion-radio slot="start" value="abaixoNormal"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Acamado</ion-label>
+              <ion-radio slot="start" value="acamado"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+        <!-- Diagnótico -->
+        <ion-list lines="none">
+          <ion-list-header>
+            <ion-label>Diagnóstico</ion-label>
+          </ion-list-header>
+          <ion-radio-group formControlName="diagnostico">
+            <ion-item>
+              <ion-label>Baixo estresse</ion-label>
+              <ion-radio slot="start" value="baixoEstresse"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Moderado estresse</ion-label>
+              <ion-radio slot="start" value="moderadoEstresse"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Alto estresse</ion-label>
+              <ion-radio slot="start" value="altoEstresse"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+        <!-- Exame Fisico -->
+        <ion-list lines="none">
+          <ion-list-header>
+            <ion-label>Exame Fisico</ion-label>
+          </ion-list-header>
+          <ion-item>
+            <ion-label>Perda de gordura subcutânea</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="perdaGordura">
+              <ion-select-option value="normal">Normal</ion-select-option>
+              <ion-select-option value="leve">Leve ou Moderado</ion-select-option>
+              <ion-select-option value="grave">Gravemente depletado</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Perda de musculo estriado</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="perdaMusculo">
+              <ion-select-option value="normal">Normal</ion-select-option>
+              <ion-select-option value="leve">Leve ou Moderado</ion-select-option>
+              <ion-select-option value="grave">Gravemente depletado</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Edema sacral</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="edema">
+              <ion-select-option value="normal">Normal</ion-select-option>
+              <ion-select-option value="leve">Leve ou Moderado</ion-select-option>
+              <ion-select-option value="grave">Gravemente depletado</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Ascite</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="ascite">
+              <ion-select-option value="normal">Normal</ion-select-option>
+              <ion-select-option value="leve">Leve ou Moderado</ion-select-option>
+              <ion-select-option value="grave">Gravemente depletado</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  
+    <ion-card> 
+      <ion-card-content>
+        <ion-card-header>
+          <ion-card-subtitle>Classificação: {{this.classificacaoASG }}</ion-card-subtitle>
+          <ion-card-title>Pontuação ASG: {{this.pontuacaoASG }}</ion-card-title>
+        </ion-card-header>
+      </ion-card-content>
+    </ion-card>
+
+  </form>
+  <ion-item></ion-item>
+  <ion-item></ion-item>
+</ion-content>
