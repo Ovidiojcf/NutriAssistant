@@ -28,6 +28,10 @@ const routes: Routes = [
   },  {
     path: 'user',
     loadChildren: () => import('./view/user/user/user.module').then( m => m.UserPageModule)
+  },
+  {
+    path: 'cadastrar-ficha',
+    loadChildren: () => import('./view/pacientes/cadastrar-ficha/cadastrar-ficha.module').then( m => m.CadastrarFichaPageModule)
   }
 
 

@@ -78,7 +78,7 @@ export class SignupPage implements OnInit {
   }
   
   voltar() {
-    this.router.navigateByUrl('/home'); // Navega para a rota desejada
+    this.router.navigateByUrl('/login'); 
   }
 
 }

@@ -13,6 +13,7 @@ export interface Formulario {
     dietaPrescrita: string; // campo final da parte2 
     mudancaPeso: string;
     continuaPerdaPeso: string;
+    porcetagemPerda: string;
     pesoAtual: string;
     pesoHabitual: string;
     tempo: string;
