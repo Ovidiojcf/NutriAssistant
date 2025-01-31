@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { PageSize } from 'pdfmake/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +9,12 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 export class PdfGeneratorService {
 
   constructor() {
-    (pdfMake as any).vfs = (pdfFonts as any).vfs;
+    //(pdfMake as any).vfs = (pdfFonts as any).vfs;
+    (window as any).pdfMake.vfs = (pdfFonts as any).vfs;
   }
 
-  generatePdf(paciente: any) {
-    const dd = {
+  generatePdf(paciente : any) {
+    const docDefinition = {
       content: [
         {
           text: 'Ficha de Triagem NRS 2002',
@@ -82,25 +84,39 @@ export class PdfGeneratorService {
             }
           ],
           columnGap: 10
+        },
+        { text: 'Parte 1', style: 'header' },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['auto', '*'],
+            body: [
+              [{ text: 'Pergunta', style: 'tableHeader' }, { text: 'Resposta', style: 'tableHeader' }],
+              ['1. O IMC do paciente é < 20,5 kg/m²?', 'Selecione'],
+              ['2. O paciente teve perda de peso não-intencional nos últimos três meses?', 'Selecione'],
+              ['3. O paciente teve redução na ingestão alimentar na última semana?', 'Selecione'],
+              ['4. O paciente está em estado grave, mau estado geral ou em terapia intensiva?', 'Selecione']
+            ]
+          }
         }
       ],
       styles: {
         header: {
           fontSize: 18,
           bold: true,
-          margin: [0, 0, 0, 10]
+          margin: [0, 0, 0, 10] as [number, number, number, number]
         },
         subheader: {
           fontSize: 12,
           bold: true,
-          margin: [0, 0, 0, 3]
+          margin: [0, 0, 0, 3] as [number, number, number, number]
         }
       },
-      pageSize: 'A4',
+      pageSize: 'A4' as PageSize,
       pageMargins: [40, 60, 40, 60] as [number, number, number, number],
     };
 
-    pdfMake.createPdf(dd).open();
+    pdfMake.createPdf(docDefinition).download('test.pdf');
   }
 }
 

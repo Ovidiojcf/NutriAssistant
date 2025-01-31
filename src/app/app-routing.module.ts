@@ -25,14 +25,20 @@ const routes: Routes = [
   {
     path: 'detalhar-paciente',
     loadChildren: () => import('./view/pacientes/detalhar-paciente/detalhar-paciente.module').then(m => m.DetalharPacientePageModule)
-  },  {
+  },
+  {
     path: 'user',
     loadChildren: () => import('./view/user/user/user.module').then( m => m.UserPageModule)
   },
   {
     path: 'cadastrar-ficha',
     loadChildren: () => import('./view/pacientes/cadastrar-ficha/cadastrar-ficha.module').then( m => m.CadastrarFichaPageModule)
-  }
+  },
+  {
+    path: 'teste-pdf',
+    loadChildren: () => import('./view/teste-pdf/teste-pdf.module').then( m => m.TestePdfPageModule)
+  },
+
 
 
 
