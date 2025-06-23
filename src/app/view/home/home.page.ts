@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/model/services/auth.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage   {
   public user: any;
   
-  constructor( private router : Router, private authService: AuthService) { 
-    this.user = this.authService.getUserLogged();
+  constructor( private router : Router, private authService: AuthService, public layout: LayoutService) { 
+    this.authService.getUserFullData().subscribe(user => {
+      this.user = user;
+    });
   }
 
-  ngOnInit() {
-  }
 
   irParaLista(){
     console.log('Entrando na Lista de Pacientes');

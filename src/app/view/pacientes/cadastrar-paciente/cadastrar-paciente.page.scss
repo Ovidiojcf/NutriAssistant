@@ -1,35 +1,5 @@
-.alergias-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 2 16px; /* Adicione espaçamento se necessário */
-  }
-  
-  .alergias-header ion-label {
-    margin-right: auto;
-    flex-grow: 1;
-  }
-  
-  .alergias-header ion-button {
-    flex-shrink: 0;
-  }
-
-  .buttonPaciente{
-    margin-top: 15px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 1.2em;
-    --padding-top: 4px;  
-    --padding-bottom: 4px;
-    
-    line-height: 0.8;
-    border-radius: 20;
-    
-}
-.buttonPaciente {
-  display: block;
-  margin: 0 auto;
-  margin-top: 20px;
-  margin-left: 150px;
-  margin-right: 150px;
+.alergias-header-input {
+  pointer-events: none; // impede interação
+  color: var(--ion-color-medium);
+  background: transparent;
 }

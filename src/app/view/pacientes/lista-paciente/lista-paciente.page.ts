@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 import Paciente from 'src/app/model/entities/Paciente';
 import { AuthService } from 'src/app/model/services/auth.service';
 import { FirebaseService } from 'src/app/model/services/firebase.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 
 @Component({
   selector: 'app-lista-paciente',
   templateUrl: './lista-paciente.page.html',
   styleUrls: ['./lista-paciente.page.scss'],
 })
-export class ListaPacientePage implements OnInit {
+export class ListaPacientePage {
 
   public lista_pacientes: Paciente[] = [];
   paciente : Paciente[] = [];
@@ -17,11 +18,11 @@ export class ListaPacientePage implements OnInit {
   public searchTerm: string = ''; // Termo de busca
 
   constructor(
+    public layout: LayoutService,
     private router : Router,
     private authService: AuthService,
     private firebaseService: FirebaseService
   ) { 
-    console.log(this.authService.getUserLogged());
     this.firebaseService.read().subscribe( res =>{
       this.lista_pacientes = res.map( paciente =>{
         return{
@@ -34,15 +35,12 @@ export class ListaPacientePage implements OnInit {
     })
   }
 
-  ngOnInit( ) {
-  }
 
 
   voltar() {
     this.router.navigateByUrl('/home'); // Navega para a rota desejada
   }
   irDetalhar(){
-    console.log('Neto ok');
     this.router.navigate(['/detalhar-paciente']);
   }
   irCadastrar(){
@@ -64,8 +62,6 @@ export class ListaPacientePage implements OnInit {
   }
 
   detalhar(paciente: Paciente) {
-    console.log('Detalhando paciente: ');
-    console.log(paciente.id);
     this.router.navigateByUrl('/detalhar-paciente', { state: { paciente: paciente } });
   }
 }

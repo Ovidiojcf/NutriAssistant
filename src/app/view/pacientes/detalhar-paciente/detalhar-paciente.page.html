@@ -7,7 +7,7 @@
   </ion-title>
 </ion-toolbar>
 
-<ion-content>    
+<ion-content>
     <ion-card>
       <ion-card-header>
         <ion-card-title><ion-label>Paciente: {{ paciente.nome }}</ion-label></ion-card-title>
@@ -28,15 +28,6 @@
             </div></ion-col>
             <ion-col size="6"> <div class="ion-text-center">
               <ion-item lines="none">
-                <ion-label>Peso Atual: {{ paciente.pesoAtual }} kg</ion-label>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-label>Peso Usual: {{ paciente.pesoUsual }} kg</ion-label>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-label>IMC: {{ paciente.imc | number:'1.2-2' }}</ion-label>
-              </ion-item>
-              <ion-item lines="none">
                 <ion-label>Hábito Intestinal: {{ paciente.habitoIntestinal }}</ion-label>
               </ion-item>
             </div></ion-col>
@@ -44,7 +35,7 @@
           <ion-item lines="none">
             <ion-label>Alergias:</ion-label>
             <ion-note slot="end">
-              <ion-chip *ngFor="let alergia of paciente.alergia">
+              <ion-chip *ngFor="let alergia of paciente.alergias">
                 {{ alergia }}
               </ion-chip>
             </ion-note>
@@ -52,8 +43,12 @@
         </ion-grid>
       </ion-card-content>
     </ion-card>
-    
+    <ion-card>
+      <app-lista-pdfs-paciente [pacienteId]="paciente.id"></app-lista-pdfs-paciente>
+    </ion-card>
+
     <ion-button   class="buttonPaciente"  shape="round" color="new" (click)="cadastrarFicha()">
       Efetuar Triagem
     </ion-button>
+
 </ion-content>

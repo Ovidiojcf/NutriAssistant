@@ -19,5 +19,6 @@ export interface Formulario {
     tempo: string;
     pesoInternacao: string;
     diasInternado: string;
+    imc: number;
 
 }

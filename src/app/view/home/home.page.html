@@ -1,26 +1,28 @@
-<ion-toolbar>
-  <ion-title  >
-    <img src="assets/svg/Nutri_toolbar.png" alt="">
-  </ion-title>
-</ion-toolbar>
+<div [class.tablet-mode]="layout.isTablet">
+  <ion-toolbar>
+    <ion-title  >
+      <img src="assets/svg/Nutri_toolbar.png" alt="">
+    </ion-title>
+  </ion-toolbar>
 
-<ion-content>
+  <ion-content>
 
-</ion-content>
+  </ion-content>
 
-<ion-tabs style="--background: new ;">
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button (click)="irParaCadastrarPaciente()">
-      <ion-icon name="add-circle"></ion-icon>
-      Adicionar 
-    </ion-tab-button>
-    <ion-tab-button  (click)="irParaLista()">
-      <ion-icon name="search"></ion-icon>
-      Pesquisar
-    </ion-tab-button>
-    <ion-tab-button (click)="irPerfil()">
-      <ion-icon  name="person"></ion-icon>
-      Perfil
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
+  <ion-tabs style="--background: new ;">
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button (click)="irParaCadastrarPaciente()">
+        <ion-icon name="add-circle"></ion-icon>
+        Adicionar 
+      </ion-tab-button>
+      <ion-tab-button  (click)="irParaLista()">
+        <ion-icon name="search"></ion-icon>
+        Pesquisar
+      </ion-tab-button>
+      <ion-tab-button (click)="irPerfil()">
+        <ion-icon  name="person"></ion-icon>
+        Perfil
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</div>

@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css?family=Archivo:400,700&display=swap');
+
+.tablet-mode {
+  font-size: 18px;
+
+  ion-content, form, .form-container {
+    font-size: 18px;
+    padding: 24px 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  ion-list, ion-item {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  ion-button {
+    font-size: 20px;
+    font-family: 'Archivo', sans-serif;
+    padding: 16px 32px;
+    --border-radius: 12px;
+    --background: var(--ion-color-new, #69bb7b);
+    --color: #fff;
+    margin: 12px 0;
+  }
+
+  .center-btn {
+    display: block;
+    margin: 24px auto 0 auto;
+    max-width: 320px;        
+    width: 100%;              
+    text-align: center;
+  }
+
+  ion-input, ion-select, ion-textarea {
+    --padding-start: 20px;
+    --padding-end: 20px;
+    min-height: 56px;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  h1, .ion-title {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 1.7rem;
+    margin-bottom: 12px;
+  }
+  ion-card-title{
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+  }
+
+  ion-label {
+    font-size: 18px;
+  }
+
+  ion-button[color="new"] {
+    --background: var(--ion-color-new, #69bb7b);
+    --color: #fff;
+  }
+  ion-button[color="danger"] {
+    --background: #e74c3c;
+    --color: #fff;
+  }
+}

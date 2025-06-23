@@ -34,13 +34,6 @@ const routes: Routes = [
     path: 'cadastrar-ficha',
     loadChildren: () => import('./view/pacientes/cadastrar-ficha/cadastrar-ficha.module').then( m => m.CadastrarFichaPageModule)
   },
-  {
-    path: 'teste-pdf',
-    loadChildren: () => import('./view/teste-pdf/teste-pdf.module').then( m => m.TestePdfPageModule)
-  },
-
-
-
 
 ];
 

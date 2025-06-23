@@ -9,17 +9,35 @@
 
 <ion-content>
   <!-- NSR e com as devidas restrições de lógica de programação -->
-  <form [formGroup]="formNRS1" >
+  <form [formGroup]="formNRS1">
     <ion-card>
       <ion-item lines="none">
         <ion-label>Paciente: {{paciente.nome}}</ion-label>
       </ion-item>
+      <form [formGroup]="formASG">
+        <ion-item>
+          <ion-input label="Peso Atual" type="number" fill="outline" inputmode="decimal" step="0.1"
+            formControlName="pesoAtual" (ionInput)="calcularPerdaPeso();calcularIMC()">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Peso Habitual" type="number" fill="outline" inputmode="decimal" step="0.1"
+            formControlName="pesoHabitual" (ionInput)="calcularPerdaPeso()">
+          </ion-input>
+        </ion-item>
+      </form>
       <ion-item lines="none">
         <ion-label position="floating">Data</ion-label>
         <ion-input formControlName="data" type="text" [value]="dataAtual"></ion-input>
       </ion-item>
       <ion-item lines="none">
-        <ion-label>IMC atual: {{paciente.imc.toFixed(2)}}</ion-label>
+        <ion-label>IMC atual: {{imcCalculado.toFixed(2)}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Perda de peso:</ion-label>
+        <ion-note slot="end" color="primary">
+          {{ perdaPeso | number:'1.1-2' }}%
+        </ion-note>
       </ion-item>
       <ion-card-header>
         <ion-label>Parte 1</ion-label>
@@ -29,10 +47,10 @@
 
           <ion-item>
             <ion-label>1. O IMC do paciente é < 20,5 kg/m²?</ion-label>
-            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="pIMC">
-              <ion-select-option value="sim">Sim</ion-select-option>
-              <ion-select-option value="nao">Não</ion-select-option>
-            </ion-select>
+                <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="pIMC">
+                  <ion-select-option value="sim">Sim</ion-select-option>
+                  <ion-select-option value="nao">Não</ion-select-option>
+                </ion-select>
           </ion-item>
 
           <ion-item>
@@ -70,7 +88,7 @@
         <ion-card-subtitle>Parte 2</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <form [formGroup]="formNRS2" >
+        <form [formGroup]="formNRS2">
           <ion-list lines="none">
             <ion-radio-group formControlName="eNutricionalPrejudicado">
               <ion-item>
@@ -83,16 +101,17 @@
                 <ion-radio slot="end" value="leve"></ion-radio>
               </ion-item>
               <ion-item>
-                <ion-label>Moderado: Perda de peso > 5% em 2 meses ou IMC 18,5 a 20,5 kg/m² + prejuizos das condições gerais
+                <ion-label>Moderado: Perda de peso > 5% em 2 meses ou IMC 18,5 a 20,5 kg/m² + prejuizos das condições
+                  gerais
                   OU
                   ingestão alimentar abaixo de 20 a 60% das necessidades normais na semana precendente.</ion-label>
                 <ion-radio slot="end" value="moderado"></ion-radio>
               </ion-item>
               <ion-item>
                 <ion-label>Grave: Perda de peso > 5% em 1 mes ( >15% em 3 meses ) ou IMC < 18,5 kg/m² + prejuizos das
-                  condições gerais OU
-                  ingestão alimentar abaixo de 0 a 25% das necessidades normais na semana precendente.</ion-label>
-                <ion-radio slot="end" value="grave"></ion-radio>
+                    condições gerais OU ingestão alimentar abaixo de 0 a 25% das necessidades normais na semana
+                    precendente.</ion-label>
+                    <ion-radio slot="end" value="grave"></ion-radio>
               </ion-item>
             </ion-radio-group>
           </ion-list>
@@ -106,7 +125,7 @@
         <ion-card-subtitle>Parte 2</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <form [formGroup]="formNRS2" >
+        <form [formGroup]="formNRS2">
           <ion-list lines="none">
             <ion-radio-group formControlName="gravidadeDoenca">
               <ion-item>
@@ -147,10 +166,10 @@
     <!-- Avaliação ASG Formulario -->
     <ion-card>
       <ion-item lines="none"><ion-label>Avaliação Nutricional Subjetiva Global</ion-label></ion-item>
-      
+
       <ion-card-content>
         <!-- Parte do Peso -->
-         <ion-list lines="none">
+        <ion-list lines="none">
           <ion-list-header><ion-label>Peso</ion-label></ion-list-header>
           <ion-item>
             <ion-label>Mudança de peso nos ultimos 6 meses?</ion-label>
@@ -167,12 +186,6 @@
             </ion-select>
           </ion-item>
           <ion-item>
-            <ion-input label="Peso Atual"  formControlName="pesoAtual" type="string" fill="outline" inputmode="decimal" step="0.1"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input label="Peso Habitual" formControlName="pesoHabitual" type="string" fill="outline" inputmode="decimal" step="0.1"></ion-input>
-          </ion-item>
-          <ion-item>
             <ion-input label="Peso Internação" type="string" fill="outline" inputmode="decimal" step="0.1"></ion-input>
           </ion-item>
           <ion-item>
@@ -183,8 +196,8 @@
             <ion-input [value]="formASG.get('perdaPeso')?.value + '%'" readonly></ion-input>
           </ion-item>
 
-         </ion-list>
-        
+        </ion-list>
+
         <!-- Parte da Dieta -->
         <ion-list lines="none">
           <ion-list-header>
@@ -207,11 +220,11 @@
           </ion-item>
           <ion-item>
             <ion-label>Dieta Liquida ou Solução Intravenosa</ion-label>
-            <ion-checkbox slot="end"  formControlName="dietaLiquida"></ion-checkbox>
+            <ion-checkbox slot="end" formControlName="dietaLiquida"></ion-checkbox>
           </ion-item>
           <ion-item>
             <ion-label>Jejum maior que 5 dias</ion-label>
-            <ion-checkbox slot="end" formControlName="jejum" ></ion-checkbox>
+            <ion-checkbox slot="end" formControlName="jejum"></ion-checkbox>
           </ion-item>
           <ion-item>
             <ion-label>Mudança Persistente maior que 30 dias</ion-label>
@@ -228,7 +241,7 @@
           </ion-item>
           <ion-item lines="none">
             <ion-label>Náuseas</ion-label>
-            <ion-checkbox slot="end" formControlName="nauseas"></ion-checkbox> 
+            <ion-checkbox slot="end" formControlName="nauseas"></ion-checkbox>
           </ion-item>
           <ion-item lines="none">
             <ion-label>Vômitos</ion-label>
@@ -240,7 +253,7 @@
           </ion-item>
           <ion-item lines="none">
             <ion-label>Anorexia, distensão ou dor abdominal</ion-label>
-            <ion-checkbox slot="end" formControlName="anorexia"></ion-checkbox> 
+            <ion-checkbox slot="end" formControlName="anorexia"></ion-checkbox>
           </ion-item>
         </ion-list>
         <!-- Capacidade Funcional Fisica -->
@@ -302,7 +315,15 @@
           </ion-item>
           <ion-item>
             <ion-label>Edema sacral</ion-label>
-            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="edema">
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="edemaSacral">
+              <ion-select-option value="normal">Normal</ion-select-option>
+              <ion-select-option value="leve">Leve ou Moderado</ion-select-option>
+              <ion-select-option value="grave">Gravemente depletado</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Edema de Tornozelo</ion-label>
+            <ion-select slot="end" interface="popover" placeholder="Selecione" formControlName="edemaTornozelo">
               <ion-select-option value="normal">Normal</ion-select-option>
               <ion-select-option value="leve">Leve ou Moderado</ion-select-option>
               <ion-select-option value="grave">Gravemente depletado</ion-select-option>
@@ -319,17 +340,26 @@
         </ion-list>
       </ion-card-content>
     </ion-card>
-  
-    <ion-card> 
+
+    <ion-card>
       <ion-card-content>
         <ion-card-header>
           <ion-card-subtitle>Classificação: {{this.classificacaoASG }}</ion-card-subtitle>
           <ion-card-title>Pontuação ASG: {{this.pontuacaoASG }}</ion-card-title>
         </ion-card-header>
       </ion-card-content>
+      
     </ion-card>
-
+    <ion-card>
+      <ion-item>
+        <ion-label position="stacked">Evolução Nutricional / Observações</ion-label>
+        <ion-textarea formControlName="evolucaoNutricional" autoGrow="true"
+          placeholder="Digite aqui a evolução nutricional ou observações...">
+        </ion-textarea>
+      </ion-item>
+    </ion-card>
+    <ion-button expand="block" color="success" (click)="gerarESalvarPdf()">
+        Gerar PDF
+    </ion-button>
   </form>
-  <ion-item></ion-item>
-  <ion-item></ion-item>
 </ion-content>

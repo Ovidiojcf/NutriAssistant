@@ -10,23 +10,29 @@ import { AuthService } from 'src/app/model/services/auth.service';
 })
 export class UserPage implements OnInit {
 
+  user: any = null;
+
   constructor(
     private authService: AuthService,
-    private router : Router,
+    private router: Router,
     private navCtrl: NavController
   ) { }
 
   ngOnInit() {
+    //this.user = this.authService.getUserLogged();
+    this.authService.getUserFullData().subscribe(user => {
+      this.user = user;
+    });
   }
 
-  logout(){
-    this.authService.signOut().then((res)=>{
+  logout() {
+    this.authService.signOut().then((res) => {
       this.router.navigate(['login']);
     })
   }
 
   voltar() {
-    this.navCtrl.back(); // voltar para a pagina anterior
+    this.router.navigate(['home']); // voltar para a pagina anterior
   }
 
 }

@@ -21,7 +21,9 @@ export class DetalharPacientePage implements OnInit {
     private authService: AuthService,
     private navCtrl: NavController
     ) { 
-      this.user = this.authService.getUserLogged();
+      this.authService.getUserFullData().subscribe(user => {
+        this.user = user;
+      });
     }
 
   ngOnInit() {
@@ -33,11 +35,10 @@ export class DetalharPacientePage implements OnInit {
     this.navCtrl.back(); // voltar para a pagina anterior
   }
   cadastrarFicha() {
-    const navigationExtras: NavigationExtras = {
-      state: {
-        paciente: this.paciente
-      }
-    };
-    this.router.navigate(['cadastrar-ficha'], navigationExtras);
+    if (this.paciente) {
+      this.router.navigate(['/cadastrar-ficha'], { state: { paciente: this.paciente } });
+    } else {
+      alert('Paciente não carregado. Tente novamente.');
+    }
   }
 }

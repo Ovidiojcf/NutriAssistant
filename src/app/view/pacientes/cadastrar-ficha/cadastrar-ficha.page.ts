@@ -5,7 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import Paciente from 'src/app/model/entities/Paciente';
 import { AuthService } from 'src/app/model/services/auth.service';
+import { PdfGeneratorService } from 'src/app/model/services/pdf-generator.service';
 import { FirebaseService } from 'src/app/model/services/firebase.service';
+import * as pdfMake from 'pdfmake/build/pdfmake';
 
 @Component({
   selector: 'app-cadastrar-ficha',
@@ -13,61 +15,109 @@ import { FirebaseService } from 'src/app/model/services/firebase.service';
   styleUrls: ['./cadastrar-ficha.page.scss'],
 })
 export class CadastrarFichaPage implements OnInit {
-  paciente : Paciente;
+  paciente: Paciente;
   public user: any;
-  public pacienteId : string;
-  public formNRS1 : FormGroup;
-  public formNRS2 : FormGroup;
+  public pacienteId: string;
+  public formNRS1: FormGroup;
+  public formNRS2: FormGroup;
   public formASG: FormGroup;
   public dataAtual: string = '';
   public mostrarParte2: boolean = false;
   public pontuacaoASG: number;
   public classificacaoASG: string;
+  public imcCalculado: number = 0;
+  public perdaPeso: number = 0;
+
 
   constructor(
-    private router : Router,
+    private router: Router,
     private authService: AuthService,
-    private firebaseService: FirebaseService,
+    private pdfGeneratorService: PdfGeneratorService,
     private route: ActivatedRoute,
-    private formBuilder : FormBuilder,
+    private formBuilder: FormBuilder,
+    private firebaseService: FirebaseService,
     private datePipe: DatePipe,
     private navCtrl: NavController) {
-      this.user = this.authService.getUserLogged();
-      this.formNRS1 = this.formBuilder.group({
-        data: ['', Validators.required],
-        pIMC: ['', Validators.required],
-        pPerda : ['', Validators.required],
-        pReducao : ['', Validators.required],
-        pEstado : ['', Validators.required],
-      });
 
-      this.formASG = this.formBuilder.group({
-        mudancaPeso: ['', Validators.required],
-        continuaPerdendoPeso: ['', Validators.required],
-        porcetagemPerda: ['',Validators.required],
-        pesoAtual: ['', Validators.required],
-        pesoHabitual: ['', Validators.required],
-        perdaPeso: ['', Validators.required],
-        mudancaDieta: ['', Validators.required],
-        dietaHipocalorica: [false],
-        dietaPastosaHipocalorica: [false],
-        dietaLiquida: [false],
-        jejum: [false],
-        mudancaPersistente: [false],
-        disfagia: [false],
-        nauseas: [false],
-        vomitos: [false],
-        diarreia: [false],
-        anorexia: [false],
-        capacidadeFuncional: ['', Validators.required],
-        diagnostico: ['', Validators.required],
-        perdaGordura: ['', Validators.required],
-        perdaMusculo: ['', Validators.required],
-        edema: ['', Validators.required],
-        ascite: ['', Validators.required],
-      });
+    this.authService.getUserFullData().subscribe(user => {
+      this.user = user;
+    });
 
-     }
+    this.formNRS1 = this.formBuilder.group({
+      data: ['', Validators.required],
+      pIMC: ['', Validators.required],
+      pPerda: ['', Validators.required],
+      pReducao: ['', Validators.required],
+      pEstado: ['', Validators.required],
+    });
+
+    this.formASG = this.formBuilder.group({
+      mudancaPeso: ['', Validators.required],
+      continuaPerdendoPeso: ['', Validators.required],
+      porcetagemPerda: ['', Validators.required],
+      pesoAtual: ['', Validators.required],
+      pesoHabitual: ['', Validators.required],
+      perdaPeso: ['', Validators.required],
+      mudancaDieta: ['', Validators.required],
+      dietaHipocalorica: [false],
+      dietaPastosaHipocalorica: [false],
+      dietaLiquida: [false],
+      jejum: [false],
+      mudancaPersistente: [false],
+      disfagia: [false],
+      nauseas: [false],
+      vomitos: [false],
+      diarreia: [false],
+      anorexia: [false],
+      capacidadeFuncional: ['', Validators.required],
+      diagnostico: ['', Validators.required],
+      perdaGordura: ['', Validators.required],
+      perdaMusculo: ['', Validators.required],
+      edemaSacral: ['', Validators.required],
+      edemaTornozelo: ['', Validators.required],
+      ascite: ['', Validators.required],
+      evolucaoNutricional: ['', Validators.required],
+    });
+
+  }
+  async gerarESalvarPdf() {
+
+    const nrs2Padrao = {
+      eNutricionalPrejudicado: 'Ausente',
+      gravidadeDoenca: 'Ausente'
+    };
+    const formNRS2ParaPdf = this.formNRS2?.value || nrs2Padrao;
+
+    // this.formASG.patchValue({
+    //   imc: this.imcCalculado.toFixed(2),
+    //   perdaPeso: this.perdaPeso.toFixed(1)
+    // });
+    // this.formASG.updateValueAndValidity();
+    const formASGParaPdf = {
+      ...this.formASG.value,
+      imc: this.imcCalculado.toFixed(2),
+      perdaPeso: this.perdaPeso.toFixed(1)
+    };
+
+    
+    const docDefinition = this.pdfGeneratorService['buildDocDefinition'](
+      this.paciente,
+      this.formNRS1.value,
+      formNRS2ParaPdf,
+      formASGParaPdf, // Aqui já está evolucaoNutricional, pesoAtual, pesoHabitual, imc, etc.
+      this.pontuacaoASG,
+      this.classificacaoASG,
+      this.calcularEstadoNutricional()
+    );
+
+    // Abre o PDF em nova aba para visualização imediata
+    pdfMake.createPdf(docDefinition).open();
+
+
+    const pdfUrl = await this.pdfGeneratorService.savePdfToFirebase(this.paciente, docDefinition);
+    await this.firebaseService.adicionarPdfAoPaciente(this.paciente.id, pdfUrl, new Date());
+    alert('PDF salvo com sucesso!');
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -86,23 +136,33 @@ export class CadastrarFichaPage implements OnInit {
     this.formNRS1.valueChanges.subscribe(() => { // Observa as mudanças no formNRS1
       this.verificarParte1();
     });
-    
-      // Observa as mudanças nos campos de peso
-  this.formASG.get('pesoAtual')?.valueChanges.subscribe(() => {
-    this.calcularPerdaPeso();
-  });
-  this.formASG.get('pesoHabitual')?.valueChanges.subscribe(() => {
-    this.calcularPerdaPeso();
-  });
-  
-  this.formASG.valueChanges.subscribe(() => { 
-    this.atualizarPontuacaoEClassificacao(); 
 
-  });
+    this.formASG.valueChanges.subscribe(() => {
+      this.atualizarPontuacaoEClassificacao();
+    });
+
+    this.formASG.get('pesoAtual')?.valueChanges.subscribe(() => {
+      this.calcularIMC();
+    });
+
+    this.formASG.get('pesoHabitual')?.valueChanges.subscribe(() => {
+      this.calcularPerdaPeso();
+    });
+
   }
 
   voltar() {
-    this.navCtrl.back(); // voltar para a pagina anterior
+    this.navCtrl.back();
+  }
+
+  calcularIMC() {
+    const peso = parseFloat(this.formASG.get('pesoAtual')?.value);
+    const altura = parseFloat(this.paciente.altura); 
+    if (!isNaN(peso) && !isNaN(altura) && altura > 0) {
+      this.imcCalculado = peso / (altura * altura);
+    } else {
+      this.imcCalculado = 0;
+    }
   }
 
   verificarParte1() {
@@ -110,7 +170,7 @@ export class CadastrarFichaPage implements OnInit {
       const parte1Respostas = ['pIMC', 'pPerda', 'pReducao', 'pEstado'];
       const simNaParte1 = parte1Respostas.some(campo => this.formNRS1.get(campo)?.value === 'sim');
       this.mostrarParte2 = simNaParte1;
-  
+
       if (this.mostrarParte2) {
         // Cria o formNRS2 apenas se a Parte 2 for exibida
         this.formNRS2 = this.formBuilder.group({
@@ -120,33 +180,35 @@ export class CadastrarFichaPage implements OnInit {
       }
     } else {
       // Se o formulário NRS1 não for válido, esconde a Parte 2
-      this.mostrarParte2 = false; 
+      this.mostrarParte2 = false;
     }
   }
 
   calcularPerdaPeso() {
     const pesoAtual = parseFloat(this.formASG.get('pesoAtual')?.value);
     const pesoHabitual = parseFloat(this.formASG.get('pesoHabitual')?.value);
-  
-    if (!isNaN(pesoAtual) && !isNaN(pesoHabitual) && pesoHabitual !== 0) {
-      const perdaPeso = ((pesoHabitual - pesoAtual) / pesoHabitual) * 100;
-      this.formASG.patchValue({ perdaPeso: perdaPeso.toFixed(1) }); // Atualiza o campo no formulário
-      // Verifica se a perda de peso é significativa e define "sim" ou "nao"
-      if (perdaPeso > 10) { 
+
+    if (!isNaN(pesoAtual) && !isNaN(pesoHabitual) && pesoHabitual > 0) {
+      this.perdaPeso = ((pesoHabitual - pesoAtual) / pesoHabitual) * 100;
+
+      // Atualiza o campo do formASG se necessário
+      this.formASG.patchValue({ perdaPeso: this.perdaPeso.toFixed(1) });
+
+      // Atualiza continuaPerdendoPeso no formASG
+      if (this.perdaPeso > 10) {
         this.formASG.patchValue({ continuaPerdendoPeso: 'sim' });
       } else {
         this.formASG.patchValue({ continuaPerdendoPeso: 'nao' });
       }
-      return perdaPeso;
     } else {
-      this.formASG.patchValue({ perdaPeso: null }); // Limpa o campo se os valores forem inválidos
-      return 0; // Ou outro valor padrão para indicar erro/ausência de dados
+      this.perdaPeso = 0;
+      this.formASG.patchValue({ perdaPeso: null, continuaPerdendoPeso: null });
     }
   }
 
   calcularEstadoNutricional(): string {
-    if (!this.formNRS2.valid) {
-      return 'Parte 2 incompleta'; // Ou outro valor que indique que a Parte 2 não está completa
+    if (!this.formNRS2 || !this.formNRS2.valid) {
+      return 'Parte 2 incompleta';
     }
     const valorA = this.formNRS2.get('eNutricionalPrejudicado')?.value;
     const valorB = this.formNRS2.get('gravidadeDoenca')?.value;
@@ -165,12 +227,11 @@ export class CadastrarFichaPage implements OnInit {
       case 'leve': return 1;
       case 'moderado': return 2;
       case 'grave': return 3;
-      default: return 0; 
+      default: return 0;
     }
   }
 
   calcularPontuacaoASG(): number {
-    
     let pontuacao = 0;
     const formValues = this.formASG.value;
 
@@ -181,17 +242,19 @@ export class CadastrarFichaPage implements OnInit {
     if (formValues.continuaPerdendoPeso === 'sim') {
       pontuacao += 1;
     }
-    if (parseFloat(this.formASG.get('perdaPeso')?.value) > 0) {
-      pontuacao += 2; // Adicionado para perda de peso
-    }
-    const perdaPeso = parseFloat(this.formASG.get('perdaPeso')?.value);
 
-    if (!isNaN(perdaPeso) && perdaPeso > 10) {
-      pontuacao += 2;
-    } else {
-      pontuacao += 1;
+    if (formValues.mudancaPeso === 'sim' || formValues.continuaPerdendoPeso === 'sim') {
+      const perdaPeso = parseFloat(this.formASG.get('perdaPeso')?.value);
+      if (!isNaN(perdaPeso) && perdaPeso > 0) {
+        pontuacao += 2; // Perda de peso presente
+        if (perdaPeso > 10) {
+          pontuacao += 2;
+        } else {
+          pontuacao += 1;
+        }
+      }
     }
-    console.log(pontuacao);
+
     // Dieta
     if (formValues.mudancaDieta === 'sim') {
       pontuacao += 1;
@@ -210,13 +273,11 @@ export class CadastrarFichaPage implements OnInit {
     }
     if (formValues.mudancaPersistente) {
       pontuacao += 4;
-    }  
-    
-    console.log(pontuacao);
+    }
+
     // Sintomas Gastrintestinais
     if (formValues.disfagia) {
       pontuacao += 1;
-      console.log("disfalgia",pontuacao);
     }
     if (formValues.nauseas) {
       pontuacao += 1;
@@ -230,16 +291,14 @@ export class CadastrarFichaPage implements OnInit {
     if (formValues.anorexia) {
       pontuacao += 2;
     }
-    console.log(pontuacao);
-  
+
     // Capacidade Funcional Física
     if (formValues.capacidadeFuncional === 'abaixoNormal') {
       pontuacao += 1;
     } else if (formValues.capacidadeFuncional === 'acamado') {
       pontuacao += 2;
     }
-    console.log(pontuacao);
-  
+
     // Diagnóstico
     if (formValues.diagnostico === 'baixoEstresse') {
       pontuacao += 1;
@@ -248,27 +307,23 @@ export class CadastrarFichaPage implements OnInit {
     } else if (formValues.diagnostico === 'altoEstresse') {
       pontuacao += 3;
     }
-    console.log(pontuacao);
-  
+
     // Exame Físico
     pontuacao += this.converterValorParaNumero(formValues.perdaGordura);
     pontuacao += this.converterValorParaNumero(formValues.perdaMusculo);
-    pontuacao += this.converterValorParaNumero(formValues.edema);
+    pontuacao += this.converterValorParaNumero(formValues.edemaSacral);
+    pontuacao += this.converterValorParaNumero(formValues.edemaTornozelo);
     pontuacao += this.converterValorParaNumero(formValues.ascite);
-    console.log(pontuacao);
+
     return pontuacao;
   }
 
   classificarEstadoNutricional(pontuacao: number): string {
-    console.log("Entrou na classificação do numero");
     if (pontuacao < 17) {
-      console.log("Bem nutrido");
       return 'Bem nutrido';
     } else if (pontuacao >= 17 && pontuacao <= 22) {
-      console.log("Moderadamente desnutrido");
       return 'Moderadamente desnutrido';
     } else {
-      console.log("Gravemente desnutrido");
       return 'Gravemente desnutrido';
     }
   }
@@ -276,9 +331,7 @@ export class CadastrarFichaPage implements OnInit {
   atualizarPontuacaoEClassificacao() {
     this.pontuacaoASG = this.calcularPontuacaoASG();
     this.classificacaoASG = this.classificarEstadoNutricional(this.pontuacaoASG);
-    console.log("Pontuação ASG:", this.pontuacaoASG);
-    console.log("Classificação:", this.classificacaoASG);
   }
-   
+
 
 }

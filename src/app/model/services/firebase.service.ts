@@ -15,19 +15,16 @@ export class FirebaseService {
   buscarTodos(){
     return this.angularFirestore.collection(this.PATH).snapshotChanges();
   }
-  
+
   cadastrar(paciente : Paciente){
     return this.angularFirestore.collection(this.PATH).add({
       nome: paciente.nome,
       idade: paciente.idade,
       data: paciente.data,
-      alergia: paciente.alergia,
+      alergias: paciente.alergias,
       comorbidades: paciente.comorbidades,
       habitoIntestinal: paciente.habitoIntestinal,
-      pesoAtual: paciente.pesoAtual,
-      pesoUsual: paciente.pesoUsual,
       altura: paciente.altura,
-      imc: paciente.imc
     })
   }
   read(){
@@ -51,5 +48,20 @@ export class FirebaseService {
   excluirPaciente(paciente : Paciente){
     return this.angularFirestore.collection(this.PATH).doc(paciente.id).delete()
   }
+
+  adicionarPdfAoPaciente(pacienteId: string, pdfUrl: String, data: Date){
+    return this.angularFirestore.collection('pacientes')
+      .doc(pacienteId)
+      .collection('pdfs')
+      .add({url: pdfUrl, data: data});
+  }
+
+  listarPdfsDoPaciente(pacienteId: string) {
+  return this.angularFirestore
+    .collection('pacientes')
+    .doc(pacienteId)
+    .collection('pdfs', ref => ref.orderBy('data', 'desc'))
+    .valueChanges({ idField: 'id' });
+}
 
 }

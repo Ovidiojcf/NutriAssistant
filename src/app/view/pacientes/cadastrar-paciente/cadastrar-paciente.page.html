@@ -1,55 +1,67 @@
-<ion-toolbar>
-  <ion-button slot="start" (click)="voltar()" fill="clear">
-    <ion-icon name="arrow-back"></ion-icon>
-  </ion-button>
-  <ion-title>
-    <img src="assets/svg/Nutri_toolbar.png" alt="">
-  </ion-title>
-</ion-toolbar>
+<div [class.tablet-mode]="layout.isTablet">
+  <ion-toolbar>
+    <ion-button slot="start" (click)="voltar()" fill="clear">
+      <ion-icon name="arrow-back"></ion-icon>
+    </ion-button>
+    <ion-title>
+      <img src="assets/svg/Nutri_toolbar.png" alt="">
+    </ion-title>
+  </ion-toolbar>
 
-<ion-content [fullscreen]="true">
-  <form [formGroup]="formPaciente" (ngSubmit)="cadastrarPaciente(formPaciente)">
-    <ion-item>
-      <ion-input label="Nome" type="text" formControlName="nome"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-input label="Idade" type="number" formControlName="idade"></ion-input>
-    </ion-item>
-    <ion-item>
-      <div formArrayName="alergias">
-        <ion-item *ngFor="let alergia of alergias.controls; let i = index">
-          <ion-input [formControlName]="i"></ion-input>
-          <ion-icon name="trash-outline" slot="end" (click)="removerAlergia(i)"></ion-icon>
-        </ion-item>
-      </div>
-    </ion-item>
-    <ion-item>
-      <div class="alergias-header">
-        <ion-button expand="block" color="new" (click)="adicionarAlergia()">
-          <ion-icon slot="start" name="add-circle"></ion-icon>
-          Adicionar Alergia
-        </ion-button>
-      </div>
-    </ion-item>
-    <ion-item>
-      <ion-input label="Comorbidades" type="text" formControlName="comorbidades"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-select label="Hábito Intestinal" type="text" formControlName="habitoIntestinal" interface="popover" placeholder="Selecione">
-        <ion-select-option value="Regular">Regular</ion-select-option>
-        <ion-select-option value="Constipação">Constipação</ion-select-option>
-        <ion-select-option value="Diarreia">Diarreia</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-input label="Peso Atual" type="string" formControlName="pesoAtual" inputmode="decimal" step="0.1"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-input label="Peso Usual" type="string" formControlName="pesoUsual" inputmode="decimal" step="0.1"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-input label="Altura" type="string" formControlName="altura" inputmode="decimal" step="0.1"></ion-input>
-    </ion-item>
-  </form>
-  <ion-button   class="buttonPaciente"  shape="round" color="new" type="submit"  (click)="cadastrarPaciente(formPaciente)">Cadastrar Paciente</ion-button>
-</ion-content>
+  <ion-content [fullscreen]="true">
+    <form [formGroup]="formPaciente" (ngSubmit)="cadastrarPaciente(formPaciente)">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Cadastro do Paciente</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item lines="none">
+            <ion-input fill="outline" label="Nome" type="text" formControlName="nome"
+              placeholder="Nome do Paciente"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-input fill="outline" label="Idade" type="number" formControlName="idade"
+              placeholder="Idade do Paciente"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-input fill="outline" label="Comorbidades" type="text" formControlName="comorbidades"
+              placeholder="Ex: diabetes, hipertensão, asma"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-select fill="outline" label="Hábito Intestinal" formControlName="habitoIntestinal" interface="popover"
+              placeholder="Selecione">
+              <ion-select-option value="Regular">Regular</ion-select-option>
+              <ion-select-option value="Constipação">Constipação</ion-select-option>
+              <ion-select-option value="Diarreia">Diarreia</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-input fill="outline" label="Altura (m)" type="text" formControlName="altura" inputmode="decimal"
+              step="0.01" placeholder="Ex: 1.75"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-input fill="outline" readonly value="Alergias" class="alergias-header-input"
+              placeholder="Clique para adicionar alergias" tabindex="-1">
+            </ion-input>
+            <ion-button color="new" (click)="adicionarAlergia()" size="small" slot="end">
+              <ion-icon slot="start" name="add-circle"></ion-icon>
+              Adicionar
+            </ion-button>
+          </ion-item>
+          <ng-container formArrayName="alergias">
+            <ion-item *ngFor="let alergiaCtrl of alergias.controls; let i = index" lines="none">
+              <ion-input [formControlName]="i" placeholder="Alergia"></ion-input>
+              <ion-button fill="clear" color="danger" (click)="removerAlergia(i)" slot="end">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ng-container>
+        </ion-card-content>
+      </ion-card>
+      <ion-button class="center-btn" expand="block" type="submit">
+        Cadastrar Paciente
+      </ion-button>
+    </form>
+  </ion-content>
+</div>

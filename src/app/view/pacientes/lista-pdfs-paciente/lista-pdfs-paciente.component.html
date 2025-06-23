@@ -1,0 +1,21 @@
+<ng-container *ngIf="pdfs && pdfs.length > 0; else semTriagem">
+  <ion-list>
+    <ion-item lines="none" *ngFor="let pdf of pdfs">
+      <ion-label>
+        PDF gerado em: {{ pdf.data?.toDate() | date:'dd/MM/yyyy HH:mm' }}
+      </ion-label>
+      <ion-button fill="outline" slot="end" [href]="pdf.url" target="_blank">
+        Visualizar
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ng-container>
+
+<ng-template #semTriagem>
+  <ion-item lines="none" color="light">
+    <ion-label class="ion-text-center" style="width: 100%;">
+      Nenhuma triagem foi realizada para este paciente ainda.
+      Clique no botão abaixo para iniciar a triagem.
+    </ion-label>
+  </ion-item>
+</ng-template>
