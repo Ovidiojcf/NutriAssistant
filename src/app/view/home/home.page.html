@@ -1,28 +1,69 @@
-<div [class.tablet-mode]="layout.isTablet">
-  <ion-toolbar>
-    <ion-title  >
-      <img src="assets/svg/Nutri_toolbar.png" alt="">
-    </ion-title>
-  </ion-toolbar>
+<ion-toolbar>
+  <ion-title>
+    <img src="assets/svg/Nutri_toolbar.png" alt="Logo NutriAssistant" class="logo-toolbar">
+  </ion-title>
+</ion-toolbar>
 
-  <ion-content>
+<ion-content [class.tablet-mode]="layout.isTablet">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Bem-vindo ao NutriAssistant!</ion-card-title>
+      <ion-card-subtitle>Como utilizar o sistema</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ol>
+        <li>
+          <strong>Cadastrar Paciente:</strong> Clique em <b>Adicionar</b> no menu inferior para registrar um novo
+          paciente. Preencha todos os campos obrigatórios, incluindo alergias e comorbidades.
+        </li>
+        <li>
+          <strong>Pesquisar Paciente:</strong> Use o botão <b>Pesquisar</b> para localizar pacientes já cadastrados.
+          Utilize o campo de busca para filtrar pelo nome.
+        </li>
+        <li>
+          <strong>Detalhar Paciente:</strong> Clique sobre um paciente na lista para ver detalhes, editar informações
+          ou iniciar uma nova triagem.
+        </li>
+        <li>
+          <strong>Realizar Triagem:</strong> No perfil do paciente, clique em <b>Efetuar Triagem</b> para preencher a
+          ficha nutricional. Siga as etapas do formulário com atenção.
+        </li>
+        <li>
+          <strong>Gerar PDF:</strong> Após preencher a triagem, clique em <b>Gerar PDF</b> para salvar e visualizar o
+          documento. O PDF ficará disponível no histórico do paciente.
+        </li>
+        <li>
+          <strong>Consultar Histórico:</strong> No perfil do paciente, acesse a lista de PDFs gerados para consultar
+          triagens anteriores.
+        </li>
+      </ol>
+      <ion-note color="warning">
+        <strong>Atenção:</strong>
+        <ul>
+          <li>Preencha todos os campos obrigatórios para garantir a qualidade dos dados.</li>
+          <li>Revise as informações antes de salvar ou gerar o PDF, pois não é possível editar uma triagem já
+            finalizada.</li>
+          <li>Proteja seus dados de acesso e não compartilhe sua senha.</li>
+          <li>Em caso de dúvidas, consulte o suporte ou o manual do sistema.</li>
+        </ul>
+      </ion-note>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
 
-  </ion-content>
-
-  <ion-tabs style="--background: new ;">
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button (click)="irParaCadastrarPaciente()">
-        <ion-icon name="add-circle"></ion-icon>
-        Adicionar 
-      </ion-tab-button>
-      <ion-tab-button  (click)="irParaLista()">
-        <ion-icon name="search"></ion-icon>
-        Pesquisar
-      </ion-tab-button>
-      <ion-tab-button (click)="irPerfil()">
-        <ion-icon  name="person"></ion-icon>
-        Perfil
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-</div>
+<ion-tabs style="--background: new ;">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button (click)="irParaCadastrarPaciente()">
+      <ion-icon name="add-circle"></ion-icon>
+      Adicionar
+    </ion-tab-button>
+    <ion-tab-button (click)="irParaLista()">
+      <ion-icon name="search"></ion-icon>
+      Pesquisar
+    </ion-tab-button>
+    <ion-tab-button (click)="irPerfil()">
+      <ion-icon name="person"></ion-icon>
+      Perfil
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

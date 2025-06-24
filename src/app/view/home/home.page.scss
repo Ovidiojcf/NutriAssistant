@@ -1,4 +1,25 @@
-ion-toolbar{
-   align-items: center;
-   
+ion-toolbar {
+  --background: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+ion-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.logo-toolbar {
+  max-width: 220px; // ajuste conforme o tamanho desejado
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+strong {
+  color: #69bb7b;
 }
