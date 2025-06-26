@@ -6,6 +6,7 @@ import Paciente from 'src/app/model/entities/Paciente';
 import { AuthService } from 'src/app/model/services/auth.service';
 import { FirebaseService } from 'src/app/model/services/firebase.service';
 import { LayoutService } from 'src/app/shared/services/layout.service';
+import { ToastService } from 'src/app/common/toast.service';
 
 @Component({
   selector: 'app-cadastrar-paciente',
@@ -21,6 +22,7 @@ export class CadastrarPacientePage implements OnInit {
   constructor(
     public layout: LayoutService,
     private alertService: AlertService,
+    private toast: ToastService,
     private router: Router,
     private authService: AuthService,
     private firebaseService: FirebaseService,
@@ -62,7 +64,7 @@ export class CadastrarPacientePage implements OnInit {
       );
       novo.uid = this.user.uid;
       this.firebaseService.cadastrar(novo).then(() => {
-        this.alertService.presentAlert("Sucesso", "Paciente Salvo!");
+        this.toast.show('Paciente salvo com sucesso!', 'success');
         this.router.navigate(["/home"]);
         this.formPaciente.reset();
       }).catch((error) => {
@@ -70,7 +72,7 @@ export class CadastrarPacientePage implements OnInit {
         console.error(error);
       });
     } else {
-      this.alertService.presentAlert("Erro", "Campos Obrigatórios!");
+      this.toast.show('Campos obrigatórios Faltantes!', 'warning');
     }
   }
 

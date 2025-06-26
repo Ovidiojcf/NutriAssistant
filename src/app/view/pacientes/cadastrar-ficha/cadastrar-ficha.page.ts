@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/model/services/auth.service';
 import { PdfGeneratorService } from 'src/app/model/services/pdf-generator.service';
 import { FirebaseService } from 'src/app/model/services/firebase.service';
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import { ToastService } from 'src/app/common/toast.service';
 
 @Component({
   selector: 'app-cadastrar-ficha',
@@ -37,7 +38,8 @@ export class CadastrarFichaPage implements OnInit {
     private formBuilder: FormBuilder,
     private firebaseService: FirebaseService,
     private datePipe: DatePipe,
-    private navCtrl: NavController) {
+    private navCtrl: NavController,
+    private toast: ToastService,) {
 
     this.authService.getUserFullData().subscribe(user => {
       this.user = user;
@@ -116,7 +118,7 @@ export class CadastrarFichaPage implements OnInit {
 
     const pdfUrl = await this.pdfGeneratorService.savePdfToFirebase(this.paciente, docDefinition);
     await this.firebaseService.adicionarPdfAoPaciente(this.paciente.id, pdfUrl, new Date());
-    alert('PDF salvo com sucesso!');
+    this.toast.show('PDF salvo com sucesso!', 'success');
   }
 
   ngOnInit() {

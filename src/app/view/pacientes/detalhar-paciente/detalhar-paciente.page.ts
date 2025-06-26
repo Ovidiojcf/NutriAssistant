@@ -4,7 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import Paciente from 'src/app/model/entities/Paciente';
 import { AuthService } from 'src/app/model/services/auth.service';
-
+import { ToastService } from 'src/app/common/toast.service';
 
 @Component({
   selector: 'app-detalhar-paciente',
@@ -19,7 +19,8 @@ export class DetalharPacientePage implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private toast: ToastService,
     ) { 
       this.authService.getUserFullData().subscribe(user => {
         this.user = user;
@@ -38,7 +39,7 @@ export class DetalharPacientePage implements OnInit {
     if (this.paciente) {
       this.router.navigate(['/cadastrar-ficha'], { state: { paciente: this.paciente } });
     } else {
-      alert('Paciente não carregado. Tente novamente.');
+      this.toast.show('Paciente não carregado. Tente novamente.', 'danger');
     }
   }
 }

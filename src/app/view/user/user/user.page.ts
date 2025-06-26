@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { AuthService } from 'src/app/model/services/auth.service';
+import { ToastService } from 'src/app/common/toast.service';
 
 @Component({
   selector: 'app-user',
@@ -14,6 +15,7 @@ export class UserPage implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private toast: ToastService,
     private router: Router,
     private navCtrl: NavController
   ) { }
@@ -27,8 +29,11 @@ export class UserPage implements OnInit {
 
   logout() {
     this.authService.signOut().then((res) => {
+      this.toast.show('Logout realizado com sucesso', 'success');
       this.router.navigate(['login']);
-    })
+    }).catch(() => {
+      this.toast.show('Erro ao sair da aplicação', 'danger');
+    });
   }
 
   voltar() {
