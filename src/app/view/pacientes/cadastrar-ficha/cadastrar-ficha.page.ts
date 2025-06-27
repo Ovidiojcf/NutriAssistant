@@ -101,7 +101,7 @@ export class CadastrarFichaPage implements OnInit {
       perdaPeso: this.perdaPeso.toFixed(1)
     };
 
-    
+
     const docDefinition = this.pdfGeneratorService['buildDocDefinition'](
       this.paciente,
       this.formNRS1.value,
@@ -112,13 +112,10 @@ export class CadastrarFichaPage implements OnInit {
       this.calcularEstadoNutricional()
     );
 
-    // Abre o PDF em nova aba para visualização imediata
-    pdfMake.createPdf(docDefinition).open();
-
-
     const pdfUrl = await this.pdfGeneratorService.savePdfToFirebase(this.paciente, docDefinition);
     await this.firebaseService.adicionarPdfAoPaciente(this.paciente.id, pdfUrl, new Date());
     this.toast.show('PDF salvo com sucesso!', 'success');
+    this.router.navigate(['/detalhar-paciente'], { state: { paciente: this.paciente } });
   }
 
   ngOnInit() {
@@ -159,7 +156,7 @@ export class CadastrarFichaPage implements OnInit {
 
   calcularIMC() {
     const peso = parseFloat(this.formASG.get('pesoAtual')?.value);
-    const altura = parseFloat(this.paciente.altura); 
+    const altura = parseFloat(this.paciente.altura);
     if (!isNaN(peso) && !isNaN(altura) && altura > 0) {
       this.imcCalculado = peso / (altura * altura);
     } else {
