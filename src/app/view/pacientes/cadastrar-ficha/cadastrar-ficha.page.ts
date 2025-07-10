@@ -90,15 +90,10 @@ export class CadastrarFichaPage implements OnInit {
     };
     const formNRS2ParaPdf = this.formNRS2?.value || nrs2Padrao;
 
-    // this.formASG.patchValue({
-    //   imc: this.imcCalculado.toFixed(2),
-    //   perdaPeso: this.perdaPeso.toFixed(1)
-    // });
-    // this.formASG.updateValueAndValidity();
     const formASGParaPdf = {
       ...this.formASG.value,
-      imc: this.imcCalculado.toFixed(2),
-      perdaPeso: this.perdaPeso.toFixed(1)
+      imc: this.imcCalculado,
+      perdaPeso: this.perdaPeso
     };
 
 
