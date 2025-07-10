@@ -43,6 +43,10 @@ const routes: Routes = [
     loadChildren: () => import('./view/pacientes/cadastrar-ficha/cadastrar-ficha.module').then( m => m.CadastrarFichaPageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'cadastar-user',
+    loadChildren: () => import('./view/user/signup/signup.module').then( m => m.SignupPageModule),
+  }
 
 ];
 

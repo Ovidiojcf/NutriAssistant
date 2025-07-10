@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/model/services/auth.service';
 export class SigninPage implements OnInit {
   formLogar: FormGroup;
 
-  constructor(private router : Router, 
+  constructor(private router : Router,
     private alertService : AlertService,
     private authService : AuthService,
     private formBuilder : FormBuilder){
@@ -57,7 +57,7 @@ export class SigninPage implements OnInit {
   }
 
   irParaSignUp(){
-    this.router.navigate(["cadastrar"]);
+    this.router.navigate(["cadastar-user"]);
   }
 
 }
