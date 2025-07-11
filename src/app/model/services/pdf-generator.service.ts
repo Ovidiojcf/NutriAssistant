@@ -256,6 +256,30 @@ export class PdfGeneratorService {
       });
     }
 
+    // Seção Capacidade Funcional
+    sections.push({
+      table: {
+        widths: ['60%', '40%'],
+        body: [
+          ['Capacidade Funcional', this.formatValue(formData.capacidadeFuncional)]
+        ]
+      },
+      layout: this.getTableLayout(),
+      margin: [0, 10, 0, 0]
+    });
+
+    // Seção Diagnóstico
+    sections.push({
+      table: {
+        widths: ['60%', '40%'],
+        body: [
+          ['Diagnóstico', this.formatValue(formData.diagnostico)]
+        ]
+      },
+      layout: this.getTableLayout(),
+      margin: [0, 10, 0, 0]
+    });
+
     // Seção Exame Físico
     sections.push({
       table: {
