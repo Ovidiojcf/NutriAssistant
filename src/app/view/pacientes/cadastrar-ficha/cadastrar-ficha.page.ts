@@ -7,7 +7,6 @@ import Paciente from 'src/app/model/entities/Paciente';
 import { AuthService } from 'src/app/model/services/auth.service';
 import { PdfGeneratorService } from 'src/app/model/services/pdf-generator.service';
 import { FirebaseService } from 'src/app/model/services/firebase.service';
-import * as pdfMake from 'pdfmake/build/pdfmake';
 import { ToastService } from 'src/app/common/toast.service';
 
 @Component({
@@ -28,6 +27,7 @@ export class CadastrarFichaPage implements OnInit {
   public classificacaoASG: string;
   public imcCalculado: number = 0;
   public perdaPeso: number = 0;
+  public isGeneratingPdf: boolean = false; // Variável para controlar o estado do botão de geração de PDF
 
 
   constructor(
@@ -84,7 +84,15 @@ export class CadastrarFichaPage implements OnInit {
   }
   async gerarESalvarPdf() {
 
-    const nrs2Padrao = {
+    if (!this.formNRS1.valid || !this.formASG.valid || (this.mostrarParte2 && !this.formNRS2?.valid)) {
+      this.toast.show('Preencha todos os campos obrigatórios!', 'warning');
+      return; // Sai da função sem ativar o spinner
+    }
+     // Desabilita o botão enquanto gera o PDF
+    this.isGeneratingPdf = true;
+
+    try {
+      const nrs2Padrao = {
       eNutricionalPrejudicado: 'Ausente',
       gravidadeDoenca: 'Ausente'
     };
@@ -111,6 +119,14 @@ export class CadastrarFichaPage implements OnInit {
     await this.firebaseService.adicionarPdfAoPaciente(this.paciente.id, pdfUrl, new Date());
     this.toast.show('PDF salvo com sucesso!', 'success');
     this.router.navigate(['/detalhar-paciente'], { state: { paciente: this.paciente } });
+
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      this.toast.show('Falha ao gerar PDF. Tente novamente.', 'danger');
+    } finally{
+      // Desativa o loading
+      this.isGeneratingPdf = false;
+    }
   }
 
   ngOnInit() {
@@ -217,10 +233,10 @@ export class CadastrarFichaPage implements OnInit {
 
   private converterValorParaNumero(valor: string): number {
     switch (valor) {
-      case 'ausente': return 0;
-      case 'leve': return 1;
-      case 'moderado': return 2;
-      case 'grave': return 3;
+      case 'Ausente': return 0;
+      case 'Leve': return 1;
+      case 'Moderado': return 2;
+      case 'Grave': return 3;
       default: return 0;
     }
   }

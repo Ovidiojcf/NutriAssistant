@@ -358,8 +358,13 @@
         </ion-textarea>
       </ion-item>
     </ion-card>
-    <ion-button expand="block" color="success" (click)="gerarESalvarPdf()">
-        Gerar PDF
+    <ion-button
+      expand="block"
+      color="success"
+      (click)="gerarESalvarPdf()"
+      [disabled]="isGeneratingPdf">
+      <ion-spinner *ngIf="isGeneratingPdf"></ion-spinner>
+      <span *ngIf="!isGeneratingPdf">Gerar PDF</span>
     </ion-button>
   </form>
 </ion-content>
