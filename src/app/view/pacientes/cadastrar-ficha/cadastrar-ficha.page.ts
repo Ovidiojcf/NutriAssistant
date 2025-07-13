@@ -84,17 +84,17 @@ export class CadastrarFichaPage implements OnInit {
   }
   async gerarESalvarPdf() {
 
-    if (!this.formNRS1.valid || !this.formASG.valid || (this.mostrarParte2 && !this.formNRS2?.valid)) {
-      this.toast.show('Preencha todos os campos obrigatórios!', 'warning');
-      return; // Sai da função sem ativar o spinner
-    }
+    // if (!this.formNRS1.valid || !this.formASG.valid || (this.mostrarParte2 && !this.formNRS2?.valid)) {
+    //   this.toast.show('Preencha todos os campos obrigatórios!', 'warning');
+    //   return; // Sai da função sem ativar o spinner
+    // }
      // Desabilita o botão enquanto gera o PDF
     this.isGeneratingPdf = true;
 
     try {
       const nrs2Padrao = {
-      eNutricionalPrejudicado: 'Ausente',
-      gravidadeDoenca: 'Ausente'
+      eNutricionalPrejudicado: 'ausente',
+      gravidadeDoenca: 'ausente'
     };
     const formNRS2ParaPdf = this.formNRS2?.value || nrs2Padrao;
 
@@ -105,7 +105,7 @@ export class CadastrarFichaPage implements OnInit {
     };
 
 
-    const docDefinition = this.pdfGeneratorService['buildDocDefinition'](
+    const docDefinition = this.pdfGeneratorService.buildDocDefinition(
       this.paciente,
       this.formNRS1.value,
       formNRS2ParaPdf,
@@ -114,6 +114,15 @@ export class CadastrarFichaPage implements OnInit {
       this.classificacaoASG,
       this.calcularEstadoNutricional()
     );
+    console.log('Paciente:', this.paciente);
+    console.log('Form NRS1:', this.formNRS1.value);
+    console.log('Form NRS2:', this.formNRS2?.value);
+    console.log('Form ASG:', this.formASG.value);
+    console.log('IMC Calculado:', this.imcCalculado);
+    console.log('Perda de Peso:', this.perdaPeso);
+    console.log('Pontuação ASG:', this.pontuacaoASG);
+    console.log('Classificação ASG:', this.classificacaoASG);
+    console.log('Estado Nutricional:', this.calcularEstadoNutricional());
 
     const pdfUrl = await this.pdfGeneratorService.savePdfToFirebase(this.paciente, docDefinition);
     await this.firebaseService.adicionarPdfAoPaciente(this.paciente.id, pdfUrl, new Date());
@@ -220,9 +229,16 @@ export class CadastrarFichaPage implements OnInit {
     if (!this.formNRS2 || !this.formNRS2.valid) {
       return 'Parte 2 incompleta';
     }
+
     const valorA = this.formNRS2.get('eNutricionalPrejudicado')?.value;
     const valorB = this.formNRS2.get('gravidadeDoenca')?.value;
+
+    console.log('Valor A (estado nutricional prejudicado):', valorA);
+    console.log('Valor B (gravidade da doença):', valorB);
+
     const soma = this.converterValorParaNumero(valorA) + this.converterValorParaNumero(valorB);
+    console.log('Soma dos pontos:', soma);
+
 
     if (soma >= 3) {
       return 'Em risco nutricional';
@@ -237,6 +253,15 @@ export class CadastrarFichaPage implements OnInit {
       case 'Leve': return 1;
       case 'Moderado': return 2;
       case 'Grave': return 3;
+      default: return 0;
+    }
+  }
+
+  private converterValorExameFisico(valor: string): number {
+    switch (valor) {
+      case 'normal': return 0;
+      case 'leve': return 1; // leve ou moderadamente depletado
+      case 'grave': return 2; // gravemente depletado
       default: return 0;
     }
   }
@@ -256,7 +281,6 @@ export class CadastrarFichaPage implements OnInit {
     if (formValues.mudancaPeso === 'sim' || formValues.continuaPerdendoPeso === 'sim') {
       const perdaPeso = parseFloat(this.formASG.get('perdaPeso')?.value);
       if (!isNaN(perdaPeso) && perdaPeso > 0) {
-        pontuacao += 2; // Perda de peso presente
         if (perdaPeso > 10) {
           pontuacao += 2;
         } else {
@@ -319,11 +343,11 @@ export class CadastrarFichaPage implements OnInit {
     }
 
     // Exame Físico
-    pontuacao += this.converterValorParaNumero(formValues.perdaGordura);
-    pontuacao += this.converterValorParaNumero(formValues.perdaMusculo);
-    pontuacao += this.converterValorParaNumero(formValues.edemaSacral);
-    pontuacao += this.converterValorParaNumero(formValues.edemaTornozelo);
-    pontuacao += this.converterValorParaNumero(formValues.ascite);
+    pontuacao += this.converterValorExameFisico(formValues.perdaGordura);
+    pontuacao += this.converterValorExameFisico(formValues.perdaMusculo);
+    pontuacao += this.converterValorExameFisico(formValues.edemaSacral);
+    pontuacao += this.converterValorExameFisico(formValues.edemaTornozelo);
+    pontuacao += this.converterValorExameFisico(formValues.ascite);
 
     return pontuacao;
   }
