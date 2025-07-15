@@ -1,6 +1,6 @@
 // Tipos básicos
 export type SimNao = 'sim' | 'nao';
-export type Classificacao = 'ausente' | 'leve' | 'moderado' | 'grave';
+export type Classificacao = 'Ausente' | 'Leve' | 'Moderado' | 'Grave';
 export type CapacidadeFuncional = 'abaixoNormal' | 'acamado';
 export type Diagnostico = 'baixoEstresse' | 'moderadoEstresse' | 'altoEstresse';
 
