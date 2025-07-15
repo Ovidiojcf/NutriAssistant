@@ -29,16 +29,16 @@ export class PdfGeneratorService {
 
   private nrs2OptionsMap = {
     'eNutricionalPrejudicado': {
-      'ausente': 'Ausente: Estado nutricional normal',
-      'leve': 'Leve: Perda de peso > 5% em 3 meses OU ingestão alimentar abaixo de 50-75%',
-      'moderado': 'Moderado: Perda de peso > 5% em 2 meses ou IMC 18,5-20,5 kg/m² + condições gerais prejudicadas',
-      'grave': 'Grave: Perda de peso > 5% em 1 mês (>15% em 3 meses) ou IMC < 18,5 kg/m²'
+      'Ausente': 'Ausente: Estado nutricional normal',
+      'Leve': 'Leve: Perda de peso > 5% em 3 meses OU ingestão alimentar abaixo de 50-75%',
+      'Moderado': 'Moderado: Perda de peso > 5% em 2 meses ou IMC 18,5-20,5 kg/m² + condições gerais prejudicadas',
+      'Grave': 'Grave: Perda de peso > 5% em 1 mês (>15% em 3 meses) ou IMC < 18,5 kg/m²'
     },
     'gravidadeDoenca': {
-      'ausente': 'Ausente: Estado nutricional normal',
-      'leve': 'Leve: Fratura de quadril, pacientes crônicos (cirrose, DPOC, diabetes, câncer)',
-      'moderado': 'Moderado: Cirurgia abdominal maior, pneumonia grave, leucemias',
-      'grave': 'Grave: Traumatismo craniano, transplante de medula, paciente em UTI'
+      'Ausente': 'Ausente: Estado nutricional normal',
+      'Leve': 'Leve: Fratura de quadril, pacientes crônicos (cirrose, DPOC, diabetes, câncer)',
+      'Moderado': 'Moderado: Cirurgia abdominal maior, pneumonia grave, leucemias',
+      'Grave': 'Grave: Traumatismo craniano, transplante de medula, paciente em UTI'
     }
   };
 
@@ -63,7 +63,7 @@ export class PdfGeneratorService {
     pdfMake.createPdf(docDefinition).open();
   }
 
-  private buildDocDefinition(
+  public buildDocDefinition(
     paciente: Paciente,
     formNRS1: NRS1Form,
     formNRS2: NRS2Form | null,
@@ -185,9 +185,9 @@ export class PdfGeneratorService {
             widths: ['60%', '40%'],
             body: [
               ['A. Estado nutricional prejudicado',
-               this.nrs2OptionsMap.eNutricionalPrejudicado[formData.eNutricionalPrejudicado || 'ausente']],
+               this.nrs2OptionsMap.eNutricionalPrejudicado[formData.eNutricionalPrejudicado || 'Ausente']],
               ['B. Gravidade da doença',
-               this.nrs2OptionsMap.gravidadeDoenca[formData.gravidadeDoenca || 'ausente']]
+               this.nrs2OptionsMap.gravidadeDoenca[formData.gravidadeDoenca || 'Ausente']]
             ]
           },
           layout: this.getTableLayout()
@@ -218,11 +218,11 @@ export class PdfGeneratorService {
     const dietaRows = [
       ['Mudança na Dieta', this.formatValue(formData.mudancaDieta)],
       ...(formData.mudancaDieta === 'sim' ? [
-        ['- Dieta Hipocalórica', this.formatValue(formData.dietaHipocalorica)],
-        ['- Dieta Pastosa Hipocalórica', this.formatValue(formData.dietaPastosaHipocalorica)],
-        ['- Dieta Líquida', this.formatValue(formData.dietaLiquida)],
-        ['- Jejum > 5 dias', this.formatValue(formData.jejum)],
-        ['- Mudança Persistente > 30 dias', this.formatValue(formData.mudancaPersistente)]
+        ['- Dieta Hipocalórica', this.formatValue(formData.dietaHipocalorica ?? false)],
+        ['- Dieta Pastosa Hipocalórica', this.formatValue(formData.dietaPastosaHipocalorica ?? false)],
+        ['- Dieta Líquida', this.formatValue(formData.dietaLiquida ?? false)],
+        ['- Jejum > 5 dias', this.formatValue(formData.jejum ?? false)],
+        ['- Mudança Persistente > 30 dias', this.formatValue(formData.mudancaPersistente ?? false)]
       ] : [])
     ];
 
