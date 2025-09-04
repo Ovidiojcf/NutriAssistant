@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { NRS1Form, NRS2Form, ASGForm } from '../interfaces/nutrition-form.interfaces';
+import { NRS1Form, NRS2Form } from '../interfaces/nutrition-form.interfaces';
 import Paciente from '../entities/Paciente';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
-import { Content, TDocumentDefinitions, Table } from 'pdfmake/interfaces';
+import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 
 type CustomTableLayout = {
   hLineWidth?: (i: number, node: any) => number;
@@ -52,13 +52,11 @@ export class PdfGeneratorService {
     paciente: Paciente,
     formNRS1: NRS1Form,
     formNRS2: NRS2Form | null,
-    formASG: ASGForm,
-    pontuacaoASG: number,
-    classificacaoASG: string,
     estadoNutricional: string,
+    observacoes?: string
   ): void {
     const docDefinition = this.buildDocDefinition(
-      paciente, formNRS1, formNRS2, formASG, pontuacaoASG, classificacaoASG, estadoNutricional
+      paciente, formNRS1, formNRS2, estadoNutricional, observacoes
     );
     pdfMake.createPdf(docDefinition).open();
   }
@@ -67,19 +65,16 @@ export class PdfGeneratorService {
     paciente: Paciente,
     formNRS1: NRS1Form,
     formNRS2: NRS2Form | null,
-    formASG: ASGForm,
-    pontuacaoASG: number,
-    classificacaoASG: string,
-    estadoNutricional: string
+    estadoNutricional: string,
+    observacoes?: string
   ): TDocumentDefinitions {
     const content: Content[] = [
       this.createHeader(),
-      this.createPatientSection(paciente, formNRS1, formASG),
+      this.createPatientSection(paciente, formNRS1),
       this.createNRS1Section(formNRS1),
       ...(formNRS2 ? [this.createNRS2Section(formNRS2)] : []),
-      this.createASGSection(formASG),
-      this.createResultsSection(pontuacaoASG, classificacaoASG, estadoNutricional),
-      this.createObservationsSection(formASG.evolucaoNutricional)
+      this.createResultsSection(estadoNutricional),
+      this.createObservationsSection(observacoes)
     ];
 
     return {
@@ -133,7 +128,7 @@ export class PdfGeneratorService {
     };
   }
 
-  private createPatientSection(paciente: Paciente, formNRS1: NRS1Form, formASG: ASGForm): Content {
+  private createPatientSection(paciente: Paciente, formNRS1: NRS1Form): Content {
     return {
       stack: [
         { text: 'DADOS DO PACIENTE', style: 'sectionTitle' },
@@ -146,7 +141,7 @@ export class PdfGeneratorService {
               ['Data da Avaliação', formNRS1.data || 'Não informado'],
               ['Alergias', this.formatArrayValue(paciente.alergias)],
               ['Comorbidades', paciente.comorbidades || 'Não informado'],
-              ['IMC', formASG.imc || 'Não calculado']
+              ['IMC', formNRS1.imc || 'Não calculado']
             ]
           },
           layout: this.getTableLayout()
@@ -156,7 +151,6 @@ export class PdfGeneratorService {
   }
 
   private createNRS1Section(formData: NRS1Form): Content {
-    // Especifica que as chaves são do tipo keyof NRS1Form
     const orderedKeys: Array<keyof NRS1Form> = ['pIMC', 'pPerda', 'pReducao', 'pEstado'];
 
     return {
@@ -167,7 +161,7 @@ export class PdfGeneratorService {
             widths: ['60%', '40%'],
             body: orderedKeys.map(key => [
               { text: this.formatLabel(key, 'nrs1'), style: 'questionText' },
-              { text: this.formatValue(formData[key]) } // Agora TypeScript sabe que 'key' é válido
+              { text: this.formatValue(formData[key]) }
             ])
           },
           layout: this.getTableLayout()
@@ -196,119 +190,7 @@ export class PdfGeneratorService {
     };
   }
 
-  private createASGSection(formData: ASGForm): Content {
-    const sections: Content[] = [];
-
-    // Seção Peso
-    sections.push({
-      table: {
-        widths: ['60%', '40%'],
-        body: [
-          ['Peso Atual (kg)', this.formatValue(formData.pesoAtual)],
-          ['Peso Habitual (kg)', this.formatValue(formData.pesoHabitual)],
-          ['Perda de Peso (%)', this.formatValue(formData.perdaPeso)],
-          ['Mudança de Peso', this.formatValue(formData.mudancaPeso)],
-          ['Continua Perdendo Peso', this.formatValue(formData.continuaPerdendoPeso)]
-        ]
-      },
-      layout: this.getTableLayout()
-    });
-
-    // Seção Dieta
-    const dietaRows = [
-      ['Mudança na Dieta', this.formatValue(formData.mudancaDieta)],
-      ...(formData.mudancaDieta === 'sim' ? [
-        ['- Dieta Hipocalórica', this.formatValue(formData.dietaHipocalorica ?? false)],
-        ['- Dieta Pastosa Hipocalórica', this.formatValue(formData.dietaPastosaHipocalorica ?? false)],
-        ['- Dieta Líquida', this.formatValue(formData.dietaLiquida ?? false)],
-        ['- Jejum > 5 dias', this.formatValue(formData.jejum ?? false)],
-        ['- Mudança Persistente > 30 dias', this.formatValue(formData.mudancaPersistente ?? false)]
-      ] : [])
-    ];
-
-    sections.push({
-      stack: [
-        { text: 'DIETA', style: 'subsectionTitle' },
-        {
-          table: {
-            widths: ['60%', '40%'],
-            body: dietaRows
-          },
-          layout: this.getTableLayout()
-        }
-      ],
-      margin: [0, 10, 0, 0]
-    });
-
-    // Seção Sintomas
-    const sintomasAtivos = [
-      formData.disfagia && 'Disfagia',
-      formData.nauseas && 'Náuseas',
-      formData.vomitos && 'Vômitos',
-      formData.diarreia && 'Diarreia',
-      formData.anorexia && 'Anorexia'
-    ].filter(Boolean);
-
-    if (sintomasAtivos.length) {
-      sections.push({
-        text: 'Sintomas Gastrointestinais: ' + sintomasAtivos.join(', '),
-        margin: [0, 10, 0, 0]
-      });
-    }
-
-    // Seção Capacidade Funcional
-    sections.push({
-      table: {
-        widths: ['60%', '40%'],
-        body: [
-          ['Capacidade Funcional', this.formatValue(formData.capacidadeFuncional)]
-        ]
-      },
-      layout: this.getTableLayout(),
-      margin: [0, 10, 0, 0]
-    });
-
-    // Seção Diagnóstico
-    sections.push({
-      table: {
-        widths: ['60%', '40%'],
-        body: [
-          ['Diagnóstico', this.formatValue(formData.diagnostico)]
-        ]
-      },
-      layout: this.getTableLayout(),
-      margin: [0, 10, 0, 0]
-    });
-
-    // Seção Exame Físico
-    sections.push({
-      table: {
-        widths: ['60%', '40%'],
-        body: [
-          ['Perda de Gordura Subcutânea', this.formatValue(formData.perdaGordura)],
-          ['Perda de Músculo Estriado', this.formatValue(formData.perdaMusculo)],
-          ['Edema Sacral', this.formatValue(formData.edemaSacral)],
-          ['Edema de Tornozelo', this.formatValue(formData.edemaTornozelo)],
-          ['Ascite', this.formatValue(formData.ascite)]
-        ]
-      },
-      layout: this.getTableLayout(),
-      margin: [0, 10, 0, 0]
-    });
-
-    return {
-      stack: [
-        { text: 'AVALIAÇÃO SUBJETIVA GLOBAL (ASG)', style: 'sectionTitle' },
-        ...sections
-      ]
-    };
-  }
-
-  private createResultsSection(
-    pontuacaoASG: number,
-    classificacaoASG: string,
-    estadoNutricional: string
-  ): Content {
+  private createResultsSection(estadoNutricional: string): Content {
     return {
       stack: [
         { text: 'RESULTADOS', style: 'sectionTitle' },
@@ -316,8 +198,6 @@ export class PdfGeneratorService {
           table: {
             widths: ['*'],
             body: [
-              [`Pontuação ASG: ${pontuacaoASG}`],
-              [`Classificação ASG: ${classificacaoASG}`],
               [`Estado Nutricional (NRS): ${estadoNutricional}`]
             ]
           },

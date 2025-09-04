@@ -11,6 +11,15 @@ export interface NRS1Form {
   pPerda?: SimNao;
   pReducao?: SimNao;
   pEstado?: SimNao;
+
+  // Campos adicionais que já estão no formNRS1
+  pesoAtual?: number;
+  pesoHabitual?: number;
+  perdaPeso?: number;
+  porcetagemPerda?: number;
+
+  // Campo calculado
+  imc?: number;
 }
 
 export interface NRS2Form {
