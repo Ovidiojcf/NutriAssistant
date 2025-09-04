@@ -112,28 +112,19 @@ export class CadastrarFichaPage implements OnInit {
   }
 
   calcularEstadoNutricional(): { pontos: number; classificacao: string } {
-    const nrs2 = this.formularioNRS.get('nrs2') as FormGroup;
-    if (!nrs2 || !nrs2.valid) {
-      return { pontos: 0, classificacao: 'Parte 2 incompleta' };
-    }
+  const nrs2 = this.formularioNRS.get('nrs2') as FormGroup;
+  if (!nrs2 || !nrs2.valid) return { pontos: 0, classificacao: 'Parte 2 incompleta' };
 
-    const valorA = nrs2.get('eNutricionalPrejudicado')?.value;
-    const valorB = nrs2.get('gravidadeDoenca')?.value;
+  let pontos = this.converterValorParaNumero(nrs2.get('eNutricionalPrejudicado')?.value)
+             + this.converterValorParaNumero(nrs2.get('gravidadeDoenca')?.value);
 
-    // Soma A + B
-    let soma = this.converterValorParaNumero(valorA) + this.converterValorParaNumero(valorB);
+  // Adiciona +1 se paciente >= 70 anos
+  if (this.paciente.idade >= 70) pontos += 1;
 
-    // Regra da idade: +1 ponto se >= 70 anos
-    const idade = this.paciente?.idade || 0; // supondo que exista paciente.idade
-    if (idade >= 70) {
-      soma += 1;
-    }
+  const classificacao = pontos >= 3 ? 'Em risco nutricional' : 'Reavaliar posteriormente';
+  return { pontos, classificacao };
+}
 
-    // Classificação textual
-    const classificacao = soma >= 3 ? 'Em risco nutricional' : 'Reavaliar posteriormente';
-
-    return { pontos: soma, classificacao };
-  }
 
 
   private converterValorParaNumero(valor: string): number {
@@ -149,14 +140,12 @@ export class CadastrarFichaPage implements OnInit {
   async gerarESalvarPdf() {
     this.isGeneratingPdf = true;
     try {
-      const nrs2 = this.formularioNRS.get('nrs2')?.value;
-      const resultadoNRS = this.calcularEstadoNutricional();
-      const resumoNRS = `Pontuação NRS: ${resultadoNRS.pontos} – ${resultadoNRS.classificacao}`;
+      const estadoNutricional = this.calcularEstadoNutricional();
+
       const docDefinition = this.pdfGeneratorService.buildDocDefinition(
         this.paciente,
         this.formularioNRS.value,
-        nrs2,
-        resumoNRS
+        estadoNutricional
       );
 
       const pdfUrl = await this.pdfGeneratorService.savePdfToFirebase(this.paciente, docDefinition);

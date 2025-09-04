@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { NRS1Form, NRS2Form } from '../interfaces/nutrition-form.interfaces';
 import Paciente from '../entities/Paciente';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
@@ -48,33 +47,21 @@ export class PdfGeneratorService {
     (pdfMake as any).vfs = (pdfFonts as any).vfs;
   }
 
-  generatePdf(
-    paciente: Paciente,
-    formNRS1: NRS1Form,
-    formNRS2: NRS2Form | null,
-    estadoNutricional: string,
-    observacoes?: string
-  ): void {
-    const docDefinition = this.buildDocDefinition(
-      paciente, formNRS1, formNRS2, estadoNutricional, observacoes
-    );
-    pdfMake.createPdf(docDefinition).open();
-  }
-
   public buildDocDefinition(
     paciente: Paciente,
-    formNRS1: NRS1Form,
-    formNRS2: NRS2Form | null,
-    estadoNutricional: string,
-    observacoes?: string
+    formularioNRS: any,
+    estadoNutricional: { pontos: number; classificacao: string }
   ): TDocumentDefinitions {
+    const formNRS1 = formularioNRS;
+    const formNRS2 = formularioNRS.nrs2 || null;
+
     const content: Content[] = [
       this.createHeader(),
       this.createPatientSection(paciente, formNRS1),
       this.createNRS1Section(formNRS1),
       ...(formNRS2 ? [this.createNRS2Section(formNRS2)] : []),
       this.createResultsSection(estadoNutricional),
-      this.createObservationsSection(observacoes)
+      this.createObservationsSection(formNRS1.evolucaoNutricional)
     ];
 
     return {
@@ -128,7 +115,7 @@ export class PdfGeneratorService {
     };
   }
 
-  private createPatientSection(paciente: Paciente, formNRS1: NRS1Form): Content {
+  private createPatientSection(paciente: Paciente, formNRS1: any): Content {
     return {
       stack: [
         { text: 'DADOS DO PACIENTE', style: 'sectionTitle' },
@@ -150,8 +137,8 @@ export class PdfGeneratorService {
     };
   }
 
-  private createNRS1Section(formData: NRS1Form): Content {
-    const orderedKeys: Array<keyof NRS1Form> = ['pIMC', 'pPerda', 'pReducao', 'pEstado'];
+  private createNRS1Section(formData: any): Content {
+    const orderedKeys: Array<keyof typeof this.nrs1OptionsMap> = ['pIMC', 'pPerda', 'pReducao', 'pEstado'];
 
     return {
       stack: [
@@ -170,7 +157,10 @@ export class PdfGeneratorService {
     };
   }
 
-  private createNRS2Section(formData: NRS2Form): Content {
+  private createNRS2Section(formData: any): Content {
+    const eNutricionalKey = (formData.eNutricionalPrejudicado || 'Ausente') as keyof typeof this.nrs2OptionsMap.eNutricionalPrejudicado;
+    const gravidadeKey = (formData.gravidadeDoenca || 'Ausente') as keyof typeof this.nrs2OptionsMap.gravidadeDoenca;
+
     return {
       stack: [
         { text: 'PARTE 2 - NRS (Avaliação Nutricional)', style: 'sectionTitle' },
@@ -178,10 +168,8 @@ export class PdfGeneratorService {
           table: {
             widths: ['60%', '40%'],
             body: [
-              ['A. Estado nutricional prejudicado',
-               this.nrs2OptionsMap.eNutricionalPrejudicado[formData.eNutricionalPrejudicado || 'Ausente']],
-              ['B. Gravidade da doença',
-               this.nrs2OptionsMap.gravidadeDoenca[formData.gravidadeDoenca || 'Ausente']]
+              ['A. Estado nutricional prejudicado', this.nrs2OptionsMap.eNutricionalPrejudicado[eNutricionalKey]],
+              ['B. Gravidade da doença', this.nrs2OptionsMap.gravidadeDoenca[gravidadeKey]]
             ]
           },
           layout: this.getTableLayout()
@@ -190,7 +178,8 @@ export class PdfGeneratorService {
     };
   }
 
-  private createResultsSection(estadoNutricional: string): Content {
+
+  private createResultsSection(estadoNutricional: { pontos: number; classificacao: string }): Content {
     return {
       stack: [
         { text: 'RESULTADOS', style: 'sectionTitle' },
@@ -198,7 +187,8 @@ export class PdfGeneratorService {
           table: {
             widths: ['*'],
             body: [
-              [`Estado Nutricional (NRS): ${estadoNutricional}`]
+              [`Estado Nutricional (NRS): ${estadoNutricional.classificacao}`],
+              [`Pontuação Total: ${estadoNutricional.pontos}`]
             ]
           },
           layout: 'noBorders'
@@ -243,9 +233,7 @@ export class PdfGeneratorService {
               }
             })
           ).subscribe({
-            error: (err) => {
-              reject(err);
-            }
+            error: (err) => reject(err)
           });
         } catch (err) {
           reject(err);

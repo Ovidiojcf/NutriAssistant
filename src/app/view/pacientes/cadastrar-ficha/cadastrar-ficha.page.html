@@ -15,23 +15,13 @@
       </ion-item>
 
       <ion-item>
-        <ion-input
-          label="Peso Atual"
-          type="number"
-          formControlName="pesoAtual"
-          step="0.1"
-          (ionInput)="calcularPerdaPeso(); calcularIMC()"
-        ></ion-input>
+        <ion-input label="Peso Atual" type="number" formControlName="pesoAtual" step="0.1"
+          (ionInput)="calcularPerdaPeso(); calcularIMC()"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-input
-          label="Peso Habitual"
-          type="number"
-          formControlName="pesoHabitual"
-          step="0.1"
-          (ionInput)="calcularPerdaPeso()"
-        ></ion-input>
+        <ion-input label="Peso Habitual" type="number" formControlName="pesoHabitual" step="0.1"
+          (ionInput)="calcularPerdaPeso()"></ion-input>
       </ion-item>
 
       <ion-item lines="none">
@@ -107,12 +97,13 @@
             <ion-radio slot="end" value="Leve"></ion-radio>
           </ion-item>
           <ion-item>
-            <ion-label>Moderado: Perda de peso > 5% em 2 meses ou IMC 18,5 a 20,5 + prejuízos gerais</ion-label>
+            <ion-label>Moderado: Perda de peso > 5% em 2 meses ou IMC 18,5-20,5 kg/m² + condições gerais
+              prejudicadas</ion-label>
             <ion-radio slot="end" value="Moderado"></ion-radio>
           </ion-item>
           <ion-item>
-            <ion-label>Grave: Perda de peso >5% em 1 mês ou IMC &lt;18,5 + prejuízos gerais</ion-label>
-            <ion-radio slot="end" value="Grave"></ion-radio>
+            <ion-label>Grave: Perda de peso > 5% em 1 mês (>15% em 3 meses) ou IMC < 18,5 kg/m²</ion-label>
+                <ion-radio slot="end" value="Grave"></ion-radio>
           </ion-item>
         </ion-radio-group>
       </ion-card-content>
@@ -125,28 +116,32 @@
       <ion-card-content>
         <ion-radio-group formControlName="gravidadeDoenca">
           <ion-item>
-            <ion-label>Ausente</ion-label>
+            <ion-label>Ausente: Estado nutricional normal</ion-label>
             <ion-radio slot="end" value="Ausente"></ion-radio>
           </ion-item>
           <ion-item>
-            <ion-label>Leve</ion-label>
+            <ion-label>Leve: Fratura de quadril, pacientes crônicos (cirrose, DPOC, diabetes, câncer)</ion-label>
             <ion-radio slot="end" value="Leve"></ion-radio>
           </ion-item>
           <ion-item>
-            <ion-label>Moderado</ion-label>
+            <ion-label>Moderado: Cirurgia abdominal maior, pneumonia grave, leucemias</ion-label>
             <ion-radio slot="end" value="Moderado"></ion-radio>
           </ion-item>
           <ion-item>
-            <ion-label>Grave</ion-label>
+            <ion-label>Grave: Traumatismo craniano, transplante de medula, paciente em UTI</ion-label>
             <ion-radio slot="end" value="Grave"></ion-radio>
           </ion-item>
         </ion-radio-group>
       </ion-card-content>
     </ion-card>
 
+
     <ion-card *ngIf="mostrarParte2 && formularioNRS.get('nrs2')?.valid">
       <ion-card-header>
-        <ion-card-title>O paciente está: {{ calcularEstadoNutricional() }}</ion-card-title>
+        <ion-card-title>
+          O paciente está: {{ calcularEstadoNutricional().classificacao }} ({{ calcularEstadoNutricional().pontos }}
+          pontos)
+        </ion-card-title>
       </ion-card-header>
     </ion-card>
 
