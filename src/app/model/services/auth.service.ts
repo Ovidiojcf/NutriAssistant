@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { getAuth, signInWithPopup, browserPopupRedirectResolver, GoogleAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider } from 'firebase/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, of } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
@@ -17,9 +17,10 @@ export class AuthService {
     private router: Router,
     private ngZone: NgZone,
     private firestore: AngularFirestore
-  ) {}
+  ) { }
 
-  public signIn(email: string, password: string) {
+  public async signIn(email: string, password: string) {
+    await this.fireAuth.setPersistence('local');
     return this.fireAuth.signInWithEmailAndPassword(email, password);
   }
 
@@ -38,11 +39,12 @@ export class AuthService {
     });
   }
 
-  public signInWithGoogle() {
+  public async signInWithGoogle() {
     const provider = new GoogleAuthProvider();
-    const auth = getAuth();
-    return signInWithPopup(auth, provider, browserPopupRedirectResolver);
+    await this.fireAuth.setPersistence('local');
+    return this.fireAuth.signInWithPopup(provider);
   }
+
 
   getUserDataFromFirestore(uid: string): Observable<any> {
     return this.firestore.collection('usuarios').doc(uid).valueChanges();
