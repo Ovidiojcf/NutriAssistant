@@ -1,5 +1,19 @@
 {
   "projects": {
     "default": "nutriassistant-732c4"
-  }
+  },
+  "targets": {
+    "nutriassistant-732c4": {
+      "hosting": {
+        "app": [
+          "nutriassistant-732c4.web.app",
+          "nutriassistant-732c4.firebaseapp.com"
+        ],
+        "nutriapp": [
+          "nutriassistant-732c4"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
