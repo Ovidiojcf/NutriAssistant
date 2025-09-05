@@ -22,7 +22,7 @@ export class ListaPacientePage {
     private router : Router,
     private authService: AuthService,
     private firebaseService: FirebaseService
-  ) { 
+  ) {
     this.firebaseService.read().subscribe( res =>{
       this.lista_pacientes = res.map( paciente =>{
         return{
@@ -48,7 +48,7 @@ export class ListaPacientePage {
   }
   filtrarPaciente() {
     if (this.searchTerm.trim() === '') {
-      this.paciente = this.lista_pacientes; // Mostra todos os atletas se a busca estiver vazia
+      this.paciente = this.lista_pacientes; // Mostra todos os
       this.ordenarPorNome(); // Ordena novamente após limpar a busca
     } else {
       this.paciente = this.lista_pacientes.filter((paciente) =>
@@ -62,6 +62,6 @@ export class ListaPacientePage {
   }
 
   detalhar(paciente: Paciente) {
-    this.router.navigateByUrl('/detalhar-paciente', { state: { paciente: paciente } });
+    this.router.navigate(['/detalhar-paciente', paciente.id]);
   }
 }

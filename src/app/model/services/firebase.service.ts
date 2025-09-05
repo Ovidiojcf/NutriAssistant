@@ -6,17 +6,17 @@ import Paciente from '../entities/Paciente';
   providedIn: 'root'
 })
 export class FirebaseService {
-  private PATH : string = 'pacientes';
-  private PATH2 : string = 'usuarios';
+  private PATH: string = 'pacientes';
+  private PATH2: string = 'usuarios';
   private PATH3: string = 'formularios';
 
-  constructor(private angularFirestore : AngularFirestore) { }
+  constructor(private angularFirestore: AngularFirestore) { }
 
-  buscarTodos(){
+  buscarTodos() {
     return this.angularFirestore.collection(this.PATH).snapshotChanges();
   }
 
-  cadastrar(paciente : Paciente){
+  cadastrar(paciente: Paciente) {
     return this.angularFirestore.collection(this.PATH).add({
       nome: paciente.nome,
       idade: paciente.idade,
@@ -27,9 +27,9 @@ export class FirebaseService {
       altura: paciente.altura,
     })
   }
-  read(){
+  read() {
     return this.angularFirestore.collection(this.PATH)
-    .snapshotChanges();
+      .snapshotChanges();
   }
 
   cadastrarUser(usuario: any, uid: string) {
@@ -38,30 +38,39 @@ export class FirebaseService {
 
 
 
-  editarPaciente(paciente: Paciente, id : string){
+  editarPaciente(paciente: Paciente, id: string) {
     return this.angularFirestore.collection(this.PATH).doc(id).update({
       nome: paciente.nome,
       idade: paciente.idade,
     })
   }
 
-  excluirPaciente(paciente : Paciente){
+  excluirPaciente(paciente: Paciente) {
     return this.angularFirestore.collection(this.PATH).doc(paciente.id).delete()
   }
 
-  adicionarPdfAoPaciente(pacienteId: string, pdfUrl: String, data: Date){
+  adicionarPdfAoPaciente(pacienteId: string, pdfUrl: String, data: Date) {
     return this.angularFirestore.collection('pacientes')
       .doc(pacienteId)
       .collection('pdfs')
-      .add({url: pdfUrl, data: data});
+      .add({ url: pdfUrl, data: data });
   }
 
   listarPdfsDoPaciente(pacienteId: string) {
-  return this.angularFirestore
-    .collection('pacientes')
-    .doc(pacienteId)
-    .collection('pdfs', ref => ref.orderBy('data', 'desc'))
-    .valueChanges({ idField: 'id' });
-}
+    return this.angularFirestore
+      .collection('pacientes')
+      .doc(pacienteId)
+      .collection('pdfs', ref => ref.orderBy('data', 'desc'))
+      .valueChanges({ idField: 'id' });
+  }
+
+  getPacienteById(id: string) {
+    return this.angularFirestore
+      .collection(this.PATH)
+      .doc<Paciente>(id)
+      .valueChanges({ idField: 'id' }); // já inclui o id
+  }
+
+
 
 }

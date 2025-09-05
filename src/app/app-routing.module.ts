@@ -29,7 +29,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'detalhar-paciente',
+    path: 'detalhar-paciente/:id',
     loadChildren: () => import('./view/pacientes/detalhar-paciente/detalhar-paciente.module').then(m => m.DetalharPacientePageModule),
     canActivate: [AuthGuard]
   },
@@ -44,7 +44,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'cadastar-user',
+    path: 'cadastrar-user',
     loadChildren: () => import('./view/user/signup/signup.module').then( m => m.SignupPageModule),
   }
 

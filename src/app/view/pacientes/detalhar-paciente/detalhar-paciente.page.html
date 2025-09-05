@@ -8,7 +8,7 @@
 </ion-toolbar>
 
 <ion-content>
-    <ion-card>
+    <ion-card *ngIf="paciente">
       <ion-card-header>
         <ion-card-title><ion-label>Paciente: {{ paciente.nome }}</ion-label></ion-card-title>
       </ion-card-header>
@@ -43,7 +43,7 @@
         </ion-grid>
       </ion-card-content>
     </ion-card>
-    <ion-card>
+    <ion-card *ngIf="paciente">
       <app-lista-pdfs-paciente [pacienteId]="paciente.id"></app-lista-pdfs-paciente>
     </ion-card>
 

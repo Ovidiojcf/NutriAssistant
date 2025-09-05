@@ -73,7 +73,9 @@ export class AuthService {
   }
 
   // Opcional: método para saber se está logado
-  public isLoggedIn(): boolean {
-    return !!this.fireAuth.currentUser;
+  public async isLoggedIn(): Promise<boolean> {
+    const user = await this.fireAuth.currentUser;
+    return !!user;
   }
+
 }

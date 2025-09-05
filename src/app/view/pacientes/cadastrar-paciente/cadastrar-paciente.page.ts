@@ -77,7 +77,7 @@ export class CadastrarPacientePage implements OnInit {
   }
 
   voltar() {
-    this.router.navigateByUrl('/home'); // Navega para a rota desejada
+    this.router.navigateByUrl('/lista-paciente'); // Navega para a rota desejada
   }
 
   get alergias() {
